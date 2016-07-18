@@ -1,0 +1,47 @@
+#%RAML 1.0
+title: This is My API
+baseUri: /pep-webapp/
+version: 1.1.0
+
+/avdemo/classes/{collection}:
+  displayName: QueryOrInsert
+  uriParameters:
+   collection:
+    type: string
+    required: true
+    description: 查询或插入表名
+  post:
+    description: 查询或插入数据
+    queryParameters: 
+     objectStr:
+      type: string
+      required: true
+      description: 查询或插入json格式
+        example：
+        查询条件data[0]._serverData：{"where":{"type":"HR"},"limit":10,"_method":"GET","_ClientVersion":"js0.6.4-proper","_InstallationId":"9072a743-fde1-48b7-f350-420374b0ab57"}
+        插入数据data.attributes：{"GROUP":"H组","name":"测试H组","type":"HR","_ClientVersion":"js0.6.4-proper","_InstallationId":"aff7db2a-825a-8381-832f-2b49e6d020ef"}      
+    responses:
+      200:
+        body:
+          application/json:
+            example: |              
+               {GROUP: "C组", name: "测试C组", type: "HR", _ClientVersion: "js0.6.4-proper", _InstallationId: "9072a743-fde1-48b7-f350-420374b0ab57"}
+               
+/classes/{collection}/{objectIds}:
+  displayName: UpdateORDelete
+  uriParameters:
+   collection:
+    type: string
+    required: true
+    description: 更新或删除表名
+    example: "testdata"
+   objectIds:
+    type: string
+    required: true
+    description: 更新或删除id
+    example: "5783639d78057d1cb8dfd37a"    
+  post:
+    description: 更新或删除数据          
+
+  
+            
