@@ -1,0 +1,428 @@
+#%RAML 0.8
+title: 掌上盛京医院接口
+version: 0.1
+baseUri: http://0.0.0.0:9090/pep
+mediaType: application/json
+/doctors:
+  get:
+    description: 查询全院医生列表
+    queryParameters:
+      searchName:
+        description: 全文检索条件
+        type: string
+        required: false
+      deptId:
+        description: 科室ID
+        type: string
+        required: false  
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "type": "array"，
+              "properties": [
+                {
+                  "id": { "type": "string", "description": "医生ID" },
+                  "name": { "type": "string", "description": "医生姓名" },
+                  "sexCode": { "type": "string", "description": "性别编码" },
+                  "title": { "type": "string", "description": "职称名称" },
+                  "hospital": { "type": "string", "description": "医院名称" },
+                  "dept": { "type": "string", "description": "科室名称", "example": "放射科（南湖）" },
+                  "skill": { "type": "string", "description": "擅长" }
+                }
+              ]
+            }
+  /{id}:
+    get:
+      description: 取得指定医生个人信息
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "object"，
+                "properties": {
+                  "id": { "type": "string", "description": "医生ID" },
+                  "name": { "type": "string", "description": "医生姓名" },
+                  "sexCode": { "type": "string", "description": "性别编码" },
+                  "title": { "type": "string", "description": "职称名称" },
+                  "hospital": { "type": "string", "description": "医院名称" },
+                  "dept": { "type": "string", "description": "科室名称", "example": "放射科（南湖）" },
+                  "skill": { "type": "string", "description": "擅长" },
+                  "summary": { "type": "string", "description": "简介" }
+                }
+              }
+/hospitalIntroduce:
+  get:
+    description: 取得医院简介信息
+    responses:
+      200:
+        body:
+          schema: |
+            { "type": "string" }
+/hospitalNavigation/builds:
+  get:
+    description: 取得院区楼列表
+    queryParameters:
+      districtId:
+        description: 院区ID
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "type": "array"，
+              "properties": [
+                {
+                  "id": { "type": "string", "description": "楼ID" },
+                  "name": { "type": "string", "description": "楼名称" },
+                  "function": { "type": "string", "description": "楼功能" }
+                }
+              ]
+            }
+  /floors:
+    get:
+      description: 取得各楼层介绍列表
+      queryParameters:
+        buildId:
+          description: 楼ID
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "层ID" },
+                    "name": { "type": "string", "description": "层名称" },
+                    "depts": { "type": "array", "description": "层内科室" }
+                  }
+                ]
+              }
+/medicalGuide:
+  get:
+    description: 取得就医指南信息
+    responses:
+      200:
+        body:
+          schema: |
+            { "type": "string" }
+/medicalReports:
+  get:
+    description: 取得指定患者检查报告列表
+    queryParameters:
+      searchTime:
+        description: 时间范围 week:一周内;month:一月内;halfYear:半年内;year:一年内
+        type: string
+        required: false
+      searchStatus:
+        description: 状态 1:已出;0:未出
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "type": "array"，
+              "properties": [
+                {
+                  "id": { "type": "string", "description": "报告ID" },
+                  "name": { "type": "string", "description": "报告名称" },
+                  "examinationDate": { "type": "string", "description": "检查时间", "example": "2016年07月20日 10:00" },
+                  "reportCategory": { "type": "string", "description": "报告类别" },
+                  "status": { "type": "string", "description": "报告状态" }
+                }
+              ]
+            }
+  /1/{id}:
+    get:
+      description: 取得指定检查报告类别1详细
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "object"，
+                "properties": {
+                  "id": { "type": "string", "description": "报告ID" },
+                  "name": { "type": "string", "description": "报告名称" },
+                  "patient": { "type": "string", "description": "患者姓名" },
+                  "examinationDate": { "type": "string", "description": "检查时间", "example": "2016年07月20日 10:00" },
+                  "inspectionDoctor": { "type": "string", "description": "检查医生" },
+                  "examineDoctor": { "type": "string", "description": "审核医生" },
+                  "reportCategory": { "type": "string", "description": "报告类别" },
+                  "status": { "type": "string", "description": "报告状态" },
+                  "items": { "type": "array", "properties": [
+                    {
+                      "id": { "type": "string", "description": "明细ID" },
+                      "name": { "type": "string", "description": "明细项目名称" },
+                      "result": { "type": "string", "description": "结果" },
+                      "reference": { "type": "string", "description": "参考" }
+                    }
+                  ] }
+                }
+              }
+/organization:
+  /depts:
+    get:
+      description: 取得指定院区科室列表
+      queryParameters:
+        districtId:
+          description: 院区ID
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                     "id": { "type": "string", "description": "科室ID" },
+                    "name": { "type": "string", "description": "科室名称" },
+                    "depts": { "type": "array", "properties": [
+                      {
+                         "id": { "type": "string", "description": "科室ID" },
+                        "name": { "type": "string", "description": "科室名称" }
+                      }
+                    ] }
+                  }
+                ]
+              }
+    /{id}:
+      get:
+        description: 取得指定科室详细
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "type": "array"，
+                  "properties": [
+                    {
+                      "id": { "type": "string", "description": "科室ID" },
+                      "name": { "type": "string", "description": "科室名称" }
+                    }
+                  ]
+                }
+  /district:
+    get:
+      description: 取得院区列表
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "院区ID" },
+                    "name": { "type": "string", "description": "院区名称" }
+                  }
+                ]
+              }
+/patients/patient:
+  get:
+    description: 取得登录患者信息
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "type": "object"，
+              "properties": {
+                "id": { "type": "string", "description": "患者ID" },
+                "name": { "type": "string", "description": "患者姓名" },
+                "idCard": { "type": "string", "description": "身份证号" }
+              }
+            }
+/register:
+  /agreement:
+    get:
+      description: 取得挂号须知信息
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string" }
+  /apptPrompt:
+    get:
+      description: 取得预约挂号提示信息
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string" }
+  /todayPrompt:
+    get:
+      description: 取得当日挂号提示信息
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string" }
+  /doctor:
+    get:
+      description: 取得医生挂号信息
+      queryParameters:
+        doctorId:
+          description: 医生ID
+          type: string
+          required: true
+        date:
+          description: 挂号时间
+          type: string
+          required: true
+        deptId:
+          description: 挂号科室ID
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "object"，
+                "properties": {
+                  "id": { "type": "string", "description": "医生ID" },
+                  "name": { "type": "string", "description": "医生姓名" },
+                  "sexCode": { "type": "string", "description": "性别编码" },
+                  "clinicCategoryCode": { "type": "string", "description": "挂号类别" },
+                  "amount": { "type": "string", "description": "挂号金额", "example": "7.00" }
+                }
+              }
+  /registration:
+    get:
+      description: 取得指定挂号单详细
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "object"，
+                "properties": {
+                  "id": { "type": "string", "description": "挂号单ID" },
+                  "code": { "type": "string", "description": "挂号单编码" },
+                  "patientId": { "type": "string", "description": "患者ID" },
+                  "patient": { "type": "string", "description": "患者姓名" },
+                  "clinicCode": { "type": "string", "description": "挂号类别" },
+                  "deptId": { "type": "string", "description": "科室ID" },
+                  "dept": { "type": "string", "description": "科室名称" },
+                  "doctorId": { "type": "string", "description": "医生ID" },
+                  "doctor": { "type": "string", "description": "医生姓名" },
+                  "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
+                  "amount": { "type": "string", "description": "挂号金额", "example": "7.00" }
+                }
+              }
+    put:
+      description: 添加挂号单
+      body:
+        schema: |
+          {
+            "type": "object"，
+            "properties": {
+              "patientId": { "type": "string", "description": "患者ID" },
+              "memberCategory": { "type": "string", "description": "患者家庭成员关系编码" },
+              "isAppointment": { "type": "string", "description": "是否预约" },
+              "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
+              "deptId": { "type": "string", "description": "科室ID" },
+              "doctorId": { "type": "string", "description": "医生ID" },
+              "clinicCategoryCode": { "type": "string", "description": "挂号类别" },
+              "amount": { "type": "string", "description": "挂号金额", "example": "7.00" },
+              "payStatus": { "type": "string", "description": "支付状态" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string", "description": "挂号单ID" }
+/schedule:
+  /dates:
+    get:
+      description: 指定医生排班时间列表
+      queryParameters:
+        doctorId:
+          description: 医生ID
+          type: string
+          required: true
+        deptId:
+          description: 科室ID
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "排班时间ID" },
+                    "date": { "type": "string", "description": "排班时间", "example": "2016-08-10" }
+                  }
+                ]
+              }
+  /doctors:
+    get:
+      description: 指定日期排班医生列表
+      queryParameters:
+        date:
+          description: 日期
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "医生ID" },
+                    "name": { "type": "string", "description": "医生姓名" },
+                    "sexCode": { "type": "string", "description": "性别编码" },
+                    "title": { "type": "string", "description": "职称名称" },
+                    "skill": { "type": "string", "description": "擅长" }
+                  }
+                ]
+              }
+  /times:
+    get:
+      description: 指定日期医生一天出诊时间列表
+      queryParameters:
+        date:
+          description: 日期
+          type: string
+          required: true
+        doctorId:
+          description: 医生ID
+          type: string
+          required: true
+        deptId:
+          description: 科室ID
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "array"，
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "排班时间ID" },
+                    "time": { "type": "string", "description": "时间", "example": "09:10" },
+                    "title": { "type": "string", "description": "职称名称" },
+                    "amount": { "type": "string", "description": "挂号金额", "example": "7.00" }
+                  }
+                ]
+              }
