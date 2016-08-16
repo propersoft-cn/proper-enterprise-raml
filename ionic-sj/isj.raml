@@ -3,6 +3,23 @@ title: 掌上盛京医院接口
 version: 0.1
 baseUri: http://0.0.0.0:9090/pep
 mediaType: application/json
+/dataBase:
+  /familyMenberTypes:
+    get:
+      description: 取得家庭成员类别列表
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "type": "object",
+                "properties": {
+                  "{code}": { "type": "object", "description": "类别编码", "properties": {
+                    "name": { "type": "string", "description": "类别名称" },
+                    "img": { "type": "string", "description": "图片路径" }
+                  }}
+                }
+              }
 /medicalGuide:
   get:
     description: 取得就医指南信息
@@ -95,13 +112,11 @@ mediaType: application/json
           body:
             schema: |
               {
-                "type": "array",
-                "properties": [
-                  {
+                "type": "object",
+                "properties": {
                     "id": { "type": "string", "description": "科室ID" },
                     "name": { "type": "string", "description": "科室名称" }
-                  }
-                ]
+                }
               }
   /districts:
     get:
@@ -317,10 +332,10 @@ mediaType: application/json
               { "type": "array", "example": ["09:10", "09:20"] }
 /patients/patient:
   get:
-    description: 取得登录患者信息
+    description: 取得患者信息
     queryParameters:
       memberId:
-        description: 家庭成员Id
+        description: 家庭成员Id（没有时返回登录账号就诊人信息）
         type: string
         required: false
     responses:
@@ -387,6 +402,10 @@ mediaType: application/json
                   "id": { "type": "string", "description": "医生ID" },
                   "name": { "type": "string", "description": "医生姓名" },
                   "sexCode": { "type": "string", "description": "性别编码" },
+                  "districtId": { "type": "string", "description": "院区Id" },
+                  "district": { "type": "string", "description": "院区名称" },
+                  "deptId": { "type": "string", "description": "科室Id" },
+                  "dept": { "type": "string", "description": "科室名称" },
                   "clinicCategoryCode": { "type": "string", "description": "挂号类别编码" },
                   "amount": { "type": "string", "description": "挂号金额", "example": "7.00" }
                 }
@@ -424,7 +443,7 @@ mediaType: application/json
                     }
                   ]
                 }
-    /{id}:
+    /registration:
       get:
         description: 取得指定挂号单详细
         responses:
@@ -452,28 +471,27 @@ mediaType: application/json
                     "status": { "type": "string", "description": "状态名称" }
                   }
                 }
-    put:
-      description: 添加挂号单
-      body:
-        schema: |
-          {
-            "type": "object",
-            "properties": {
-              "patientId": { "type": "string", "description": "患者ID" },
-              "memberId": { "type": "string", "description": "患者家庭成员关系Id" },
-              "isAppointment": { "type": "string", "description": "是否预约" },
-              "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
-              "doctorId": { "type": "string", "description": "医生ID" },
-              "categoryCode": { "type": "string", "description": "挂号类别编码" },
-              "amount": { "type": "string", "description": "挂号金额", "example": "7.00" },
-              "payStatus": { "type": "string", "description": "支付状态" }
+      put:
+        description: 添加挂号单
+        body:
+          schema: |
+            {
+              "type": "object",
+              "properties": {
+                "patientId": { "type": "string", "description": "挂号患者ID" },
+                "isAppointment": { "type": "string", "description": "是否预约" },
+                "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
+                "doctorId": { "type": "string", "description": "医生ID" },
+                "categoryCode": { "type": "string", "description": "挂号类别编码" },
+                "amount": { "type": "string", "description": "挂号金额", "example": "7.00" },
+                "payStatus": { "type": "string", "description": "支付状态" }
+              }
             }
-          }
-      responses:
-        200:
-          body:
-            schema: |
-              { "type": "string", "description": "挂号单ID" }
+        responses:
+          200:
+            body:
+              schema: |
+                { "type": "string", "description": "挂号单ID" }
 /medicalReports:
   get:
     description: 取得指定患者检查报告列表
