@@ -250,8 +250,8 @@ mediaType: application/json
                 "properties": [
                   {
                     "date": { "type": "string", "description": "排班时间", "example": "2016-08-10" },
-                    "registerNumTotal": { "type": "integer", "description": "可挂号总数" },
-                    "registerNum": { "type": "integer", "description": "已挂号数" },
+                    "total": { "type": "integer", "description": "可挂号总数" },
+                    "overCount": { "type": "integer", "description": "剩余挂号数" },
                     "districtId": { "type": "string", "description": "院区Id" },
                     "district": { "type": "string", "description": "院区名称" },
                     "deptId": { "type": "string", "description": "科室Id" },
@@ -324,7 +324,15 @@ mediaType: application/json
         200:
           body:
             schema: |
-              { "type": "array", "example": ["09:10", "09:20"] }
+              { "type": "array",
+                "properties": [
+                  {
+                    "time": { "type": "string", "description": "时间", "example": "09:10" },
+                    "total": { "type": "integer", "description": "可挂号总数" },
+                    "overCount": { "type": "integer", "description": "剩余挂号数" }
+                  }
+                ]
+              }
 /patients/patient:
   get:
     description: 取得患者信息
@@ -486,7 +494,33 @@ mediaType: application/json
           200:
             body:
               schema: |
-                { "type": "string", "description": "挂号单ID" }
+                {
+                  "type": "object",
+                  "properties": {
+                    "orderNum": { "type": "string", "description": "订单号" }
+                  }
+                }
+/orders/order:
+  get:
+    description: 取得订单详细
+    queryParameters:
+      orderNum:
+        description: 订单号
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "type": "object",
+              "properties": {
+                "orderNum": { "type": "string", "description": "订单号" },
+                "name": { "type": "string", "description": "订单名称" },
+                "description": { "type": "string", "description": "订单内容" },
+                "amount": { "type": "string", "description": "金额", "example": "7.00" }
+              }
+            }
 /medicalReports:
   get:
     description: 取得指定患者检查报告列表
