@@ -1,18 +1,40 @@
 #%RAML 0.8
 title: 掌上盛京医院接口
 version: 0.1
-baseUri: http://0.0.0.0:9090/pep
+baseUri: http://localhost:9090/api
 mediaType: application/json
+traits:
+  - secured:
+      description: 用户无权限返回错误
+      responses:
+        401:
+          body:
+            schema: |
+              { "type": "string", "description": "用户未登录" }
+  - dataError:
+      description: 数据验证错误
+      responses:
+        400:
+          body:
+            schema: |
+              { "type": "string", "description": "验证错误信息" }
+  - serverError:
+      description: 服务器错误
+      responses:
+        500:
+          body:
+            schema: |
+              { "type": "string", "description": "服务器错误信息" }
 /dataBase:
   /familyMenberTypes:
     get:
       description: 取得家庭成员类别列表
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "{code}": { "type": "object", "description": "类别编码", "properties": {
@@ -24,31 +46,30 @@ mediaType: application/json
 /medicalGuide:
   get:
     description: 取得就医指南信息
+    is: [serverError]
     responses:
       200:
         body:
           schema: |
-            {
-              "$schema": "http://json-schema.org/schema",
-              "type": "string", "example": "<p>a<br/>b</p><p>c</p>"
-            }
+            { "type": "string", "example": "<p>a<br/>b</p><p>c</p>" }
 /hospitalIntroduce:
   get:
     description: 取得医院简介信息
+    is: [serverError]
     responses:
       200:
         body:
           schema: |
-            { "$schema": "http://json-schema.org/schema","type": "string", "example": "<p>a<br/>b</p><p>c</p>" }
+            { "type": "string", "example": "<p>a<br/>b</p><p>c</p>" }
 /messages:
   get:
     description: 取得登录用户的消息列表
+    is: [secured, serverError]
     responses:
       200:
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -61,6 +82,7 @@ mediaType: application/json
 /hospitalNavigation/builds:
   get:
     description: 取得各院区楼列表
+    is: [serverError]
     queryParameters:
       districtId:
         description: 院区ID（没有时返回所有院区的楼）
@@ -71,7 +93,6 @@ mediaType: application/json
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -90,6 +111,7 @@ mediaType: application/json
   /floors:
     get:
       description: 取得各楼层介绍列表
+      is: [serverError]
       queryParameters:
         buildId:
           description: 楼ID
@@ -100,7 +122,6 @@ mediaType: application/json
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -111,15 +132,19 @@ mediaType: application/json
                 ]
               }
 /organization:
-  /depts/{id}:
+  /depts/{deptId}:
+    uriParameters:
+      deptId:
+        description: 科室Id
+        example: 1
     get:
       description: 取得指定科室详细
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                     "id": { "type": "string", "description": "科室ID" },
@@ -129,12 +154,12 @@ mediaType: application/json
   /districts:
     get:
       description: 取得院区列表
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -146,6 +171,7 @@ mediaType: application/json
 /subjects:
   get:
     description: 取得学科列表
+    is: [serverError]
     queryParameters:
       districtId:
         description: 院区ID（没有时学科合并显示）
@@ -160,7 +186,6 @@ mediaType: application/json
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -178,7 +203,12 @@ mediaType: application/json
 /doctors:
   get:
     description: 查询全院医生列表
+    is: [serverError]
     queryParameters:
+      pageNo:
+        description: 页码，从1开始，每页多少条后台控制
+        type: integer
+        required: false
       searchName:
         description: 全文检索条件
         type: string
@@ -192,7 +222,6 @@ mediaType: application/json
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -211,20 +240,29 @@ mediaType: application/json
   /photo:
     get:
       description: 取得指定医生照片
+      is: [serverError]
+      queryParameters:
+        doctorId:
+          description: 医生Id
+          type: string
+          required: true
       responses:
         200:
           body:
-            schema: |
-              { "$schema": "http://json-schema.org/schema", "type": "string" }
-  /{id}:
+            image/png:
+  /{doctorId}:
+    uriParameters:
+      doctorId:
+        description: 医生Id
+        example: 1
     get:
       description: 取得指定医生个人信息
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "医生ID" },
@@ -244,6 +282,7 @@ mediaType: application/json
   /dates:
     get:
       description: 指定医生排班时间列表（只返回有号日期）
+      is: [serverError]
       queryParameters:
         doctorId:
           description: 医生ID
@@ -258,7 +297,6 @@ mediaType: application/json
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -278,6 +316,7 @@ mediaType: application/json
   /doctors:
     get:
       description: 取得排班医生列表
+      is: [serverError]
       queryParameters:
         districtId:
           description: 院区Id
@@ -304,7 +343,6 @@ mediaType: application/json
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -325,6 +363,7 @@ mediaType: application/json
   /times:
     get:
       description: 指定日期医生一天出诊时间列表（只返回有号时间）
+      is: [serverError]
       queryParameters:
         date:
           description: 日期
@@ -338,9 +377,7 @@ mediaType: application/json
         200:
           body:
             schema: |
-              {
-                "$schema": "http://json-schema.org/schema",
-                "type": "array",
+              { "type": "array",
                 "properties": [
                   {
                     "time": { "type": "string", "description": "时间", "example": "09:10" },
@@ -352,6 +389,7 @@ mediaType: application/json
 /patients/patient:
   get:
     description: 取得患者信息
+    is: [secured, serverError]
     queryParameters:
       memberId:
         description: 家庭成员Id（没有时返回登录账号就诊人信息）
@@ -362,7 +400,6 @@ mediaType: application/json
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "id": { "type": "string", "description": "患者ID" },
@@ -379,30 +416,34 @@ mediaType: application/json
   /agreement:
     get:
       description: 取得挂号须知信息
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
-              { "$schema": "http://json-schema.org/schema", "type": "string" }
+              { "type": "string" }
   /apptPrompt:
     get:
       description: 取得预约挂号提示信息
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
-              { "$schema": "http://json-schema.org/schema", "type": "string" }
+              { "type": "string" }
   /todayPrompt:
     get:
       description: 取得当日挂号提示信息
+      is: [serverError]
       responses:
         200:
           body:
             schema: |
-              { "$schema": "http://json-schema.org/schema", "type": "string" }
+              { "type": "string" }
   /doctor:
     get:
       description: 取得医生挂号信息
+      is: [serverError]
       queryParameters:
         doctorId:
           description: 医生ID
@@ -417,7 +458,6 @@ mediaType: application/json
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "医生ID" },
@@ -434,6 +474,7 @@ mediaType: application/json
   /registrations:
     get:
       description: 取得登录人挂号单列表
+      is: [secured, serverError]
       queryParameters:
         memberId:
           description: 家庭成员Id
@@ -444,7 +485,6 @@ mediaType: application/json
             body:
               schema: |
                 {
-                  "$schema": "http://json-schema.org/schema",
                   "type": "array",
                   "properties": [
                     {
@@ -468,12 +508,12 @@ mediaType: application/json
     /registration:
       get:
         description: 取得指定挂号单详细
+        is: [secured, serverError]
         responses:
           200:
             body:
               schema: |
                 {
-                  "$schema": "http://json-schema.org/schema",
                   "type": "object",
                   "properties": {
                     "id": { "type": "string", "description": "挂号单ID" },
@@ -494,12 +534,12 @@ mediaType: application/json
                     "status": { "type": "string", "description": "状态名称" }
                   }
                 }
-      put:
+      post:
         description: 添加挂号单
+        is: [secured, dataError, serverError]
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "patientId": { "type": "string", "description": "挂号患者ID" },
@@ -516,26 +556,24 @@ mediaType: application/json
             body:
               schema: |
                 {
-                  "$schema": "http://json-schema.org/schema",
                   "type": "object",
                   "properties": {
                     "orderNum": { "type": "string", "description": "订单号" }
                   }
                 }
-/orders/order:
+/orders/{orderNum}:
+  uriParameters:
+    orderNum:
+      description: 订单号
+      example: 1
   get:
     description: 取得订单详细
-    queryParameters:
-      orderNum:
-        description: 订单号
-        type: string
-        required: true
+    is: [secured, serverError]
     responses:
       200:
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "orderNum": { "type": "string", "description": "订单号" },
@@ -547,7 +585,12 @@ mediaType: application/json
 /medicalReports:
   get:
     description: 取得指定患者检查报告列表
+    is: [secured, serverError]
     queryParameters:
+      memberId:
+        description: 家庭成员Id（没有时返回登录账号就诊人信息）
+        type: string
+        required: false
       searchTime:
         description: 时间范围 week:一周内;month:一月内;halfYear:半年内;year:一年内
         type: string
@@ -561,7 +604,6 @@ mediaType: application/json
         body:
           schema: |
             {
-              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -573,15 +615,22 @@ mediaType: application/json
                 }
               ]
             }
-  /1/{id}:
+  /{category}/{reportId}:
+    uriParameters:
+      category:
+        description: 报告类别
+        example: 1
+      reportId:
+        description: 报告Id
+        example: 1
     get:
       description: 取得指定检查报告类别1详细
+      is: [secured, serverError]
       responses:
         200:
           body:
             schema: |
               {
-                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "报告ID" },
@@ -602,3 +651,81 @@ mediaType: application/json
                   ] }
                 }
               }
+/permission:
+  /login:
+    post:
+      description: 用户登录
+      is: [dataError, serverError]
+      body:
+        schema: |
+          {
+            "type": "object",
+            "properties": {
+              "phone": { "type": "string", "description": "电话号码" },
+              "password": { "type": "string", "description": "密码" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string", "description": "token" }
+  /verificationCode:
+    get:
+      description: 取得验证码
+      is: [dataError, serverError]
+      queryParameters:
+        category:
+          description: 类别（1:注册;2:找回密码"）
+          type: string
+          required: true
+        phone:
+          description: 电话号码
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string", "description": "空字符串" }
+  /account:
+    post:
+      description: 注册帐号
+      is: [dataError, serverError]
+      body:
+        schema: |
+          {
+            "type": "object",
+            "properties": {
+              "phone": { "type": "string", "description": "电话号码" },
+              "verificationCode": { "type": "string", "description": "验证码" },
+              "password": { "type": "string", "description": "密码" },
+              "name": { "type": "string", "description": "姓名" },
+              "idCard": { "type": "string", "description": "身份证" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string", "description": "token" }
+    put:
+      description: 找回/修改密码
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "type": "object",
+            "properties": {
+              "phone": { "type": "string", "description": "电话号码" },
+              "verificationCode": { "type": "string", "description": "验证码" },
+              "nowPassword": { "type": "string", "description": "当前密码" },
+              "newPassword": { "type": "string", "description": "新密码" },
+              "confirmPassword": { "type": "string", "description": "确认密码" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              { "type": "string", "description": "空字符串" }
