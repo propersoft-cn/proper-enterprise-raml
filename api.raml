@@ -676,7 +676,7 @@ traits:
       is: [dataError, serverError]
       queryParameters:
         category:
-          description: 类别（1:注册;2:找回密码"）
+          description: 类别（1:注册;2:找回密码;3:重发）
           type: string
           required: true
         phone:
@@ -721,7 +721,8 @@ traits:
               "verificationCode": { "type": "string", "description": "验证码" },
               "nowPassword": { "type": "string", "description": "当前密码" },
               "newPassword": { "type": "string", "description": "新密码" },
-              "confirmPassword": { "type": "string", "description": "确认密码" }
+              "confirmPassword": { "type": "string", "description": "确认密码" },
+              "category": { "type": "string", "description": "1:修改密码;2:找回密码" }
             }
           }
       responses:
