@@ -10,21 +10,30 @@ traits:
         401:
           body:
             schema: |
-              { "type": "string", "description": "用户未登录" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "用户未登录"
+              }
   - dataError:
       description: 数据验证错误
       responses:
         400:
           body:
             schema: |
-              { "type": "string", "description": "验证错误信息" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "验证错误信息"
+              }
   - serverError:
       description: 服务器错误
       responses:
         500:
           body:
             schema: |
-              { "type": "string", "description": "服务器错误信息" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "服务器错误信息"
+              }
 /dataBase:
   /familyMenberTypes:
     get:
@@ -35,6 +44,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "{code}": { "type": "object", "description": "类别编码", "properties": {
@@ -51,7 +61,10 @@ traits:
       200:
         body:
           schema: |
-            { "type": "string", "example": "<p>a<br/>b</p><p>c</p>" }
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "string", "example": "<p>a<br/>b</p><p>c</p>"
+            }
 /hospitalIntroduce:
   get:
     description: 取得医院简介信息
@@ -60,7 +73,10 @@ traits:
       200:
         body:
           schema: |
-            { "type": "string", "example": "<p>a<br/>b</p><p>c</p>" }
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "string", "example": "<p>a<br/>b</p><p>c</p>"
+            }
 /messages:
   get:
     description: 取得登录用户的消息列表
@@ -70,6 +86,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -93,6 +110,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -122,6 +140,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -145,6 +164,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                     "id": { "type": "string", "description": "科室ID" },
@@ -160,6 +180,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -186,6 +207,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -222,6 +244,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -263,6 +286,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "医生ID" },
@@ -297,6 +321,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -343,6 +368,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "array",
                 "properties": [
                   {
@@ -377,7 +403,9 @@ traits:
         200:
           body:
             schema: |
-              { "type": "array",
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
                 "properties": [
                   {
                     "time": { "type": "string", "description": "时间", "example": "09:10" },
@@ -400,6 +428,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "id": { "type": "string", "description": "患者ID" },
@@ -421,7 +450,7 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string" }
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /apptPrompt:
     get:
       description: 取得预约挂号提示信息
@@ -430,7 +459,7 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string" }
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /todayPrompt:
     get:
       description: 取得当日挂号提示信息
@@ -439,7 +468,7 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string" }
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /doctor:
     get:
       description: 取得医生挂号信息
@@ -458,6 +487,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "医生ID" },
@@ -485,6 +515,7 @@ traits:
             body:
               schema: |
                 {
+                  "$schema": "http://json-schema.org/schema",
                   "type": "array",
                   "properties": [
                     {
@@ -514,6 +545,7 @@ traits:
             body:
               schema: |
                 {
+                  "$schema": "http://json-schema.org/schema",
                   "type": "object",
                   "properties": {
                     "id": { "type": "string", "description": "挂号单ID" },
@@ -540,6 +572,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "patientId": { "type": "string", "description": "挂号患者ID" },
@@ -556,6 +589,7 @@ traits:
             body:
               schema: |
                 {
+                  "$schema": "http://json-schema.org/schema",
                   "type": "object",
                   "properties": {
                     "orderNum": { "type": "string", "description": "订单号" }
@@ -574,6 +608,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
                 "orderNum": { "type": "string", "description": "订单号" },
@@ -604,6 +639,7 @@ traits:
         body:
           schema: |
             {
+              "$schema": "http://json-schema.org/schema",
               "type": "array",
               "properties": [
                 {
@@ -631,6 +667,7 @@ traits:
           body:
             schema: |
               {
+                "$schema": "http://json-schema.org/schema",
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "报告ID" },
@@ -659,6 +696,7 @@ traits:
       body:
         schema: |
           {
+            "$schema": "http://json-schema.org/schema",
             "type": "object",
             "properties": {
               "phone": { "type": "string", "description": "电话号码" },
@@ -669,7 +707,10 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string", "description": "token" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "token"
+              }
   /verificationCode:
     get:
       description: 取得验证码
@@ -687,7 +728,10 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string", "description": "空字符串" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
   /account:
     post:
       description: 注册帐号
@@ -695,6 +739,7 @@ traits:
       body:
         schema: |
           {
+            "$schema": "http://json-schema.org/schema",
             "type": "object",
             "properties": {
               "phone": { "type": "string", "description": "电话号码" },
@@ -708,13 +753,17 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string", "description": "token" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "token"
+              }
     put:
       description: 找回/修改密码
       is: [secured, dataError, serverError]
       body:
         schema: |
           {
+            "$schema": "http://json-schema.org/schema",
             "type": "object",
             "properties": {
               "phone": { "type": "string", "description": "电话号码" },
@@ -729,4 +778,7 @@ traits:
         200:
           body:
             schema: |
-              { "type": "string", "description": "空字符串" }
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
