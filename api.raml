@@ -151,26 +151,6 @@ traits:
                 ]
               }
 /organization:
-  /depts/{deptId}:
-    uriParameters:
-      deptId:
-        description: 科室Id
-        example: 1
-    get:
-      description: 取得指定科室详细
-      is: [serverError]
-      responses:
-        200:
-          body:
-            schema: |
-              {
-                "$schema": "http://json-schema.org/schema",
-                "type": "object",
-                "properties": {
-                    "id": { "type": "string", "description": "科室ID" },
-                    "name": { "type": "string", "description": "科室名称" }
-                }
-              }
   /districts:
     get:
       description: 取得院区列表
@@ -783,6 +763,39 @@ traits:
                 "type": "string", "description": "空字符串"
               }
 /user:
+  /userInfo:
+    get:
+      description: 取得登录用户基本信息
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "description": "用户ID" },
+                  "name": { "type": "string", "description": "用户姓名" },
+                  "sexCode": { "type": "string", "description": "性别编码" },
+                  "sex": { "type": "string", "description": "性别名称" },
+                  "idCard": { "type": "string", "description": "身份证号" },
+                  "phone": { "type": "string", "description": "电话号码" }
+                }
+              }
+  /familyMembers:
+    /count:
+      get:
+        description: 取得用户家庭成员数量
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "integer"
+                }
   /collectionDoctors:
     get:
       description: 取得用户收藏医生列表
@@ -840,6 +853,7 @@ traits:
     /count:
       get:
         description: 取得用户收藏医生数量
+        is: [secured, serverError]
         responses:
           200:
             body:
