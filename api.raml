@@ -878,3 +878,37 @@ traits:
                   "$schema": "http://json-schema.org/schema",
                   "type": "string", "description": "空字符串"
                 }
+/service:
+  /phone:
+    get:
+      description: 取得服务电话号码
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string"
+              }
+  /userOpinion:
+    post:
+      description: 保存当前登录用户意见
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "opinion": { "type": "string", "description": "意见" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
