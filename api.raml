@@ -151,26 +151,6 @@ traits:
                 ]
               }
 /organization:
-  /depts/{deptId}:
-    uriParameters:
-      deptId:
-        description: 科室Id
-        example: 1
-    get:
-      description: 取得指定科室详细
-      is: [serverError]
-      responses:
-        200:
-          body:
-            schema: |
-              {
-                "$schema": "http://json-schema.org/schema",
-                "type": "object",
-                "properties": {
-                    "id": { "type": "string", "description": "科室ID" },
-                    "name": { "type": "string", "description": "科室名称" }
-                }
-              }
   /districts:
     get:
       description: 取得院区列表
@@ -772,6 +752,170 @@ traits:
               "newPassword": { "type": "string", "description": "新密码" },
               "confirmPassword": { "type": "string", "description": "确认密码" },
               "category": { "type": "string", "description": "1:修改密码;2:找回密码" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
+/user:
+  /userInfo:
+    get:
+      description: 取得登录用户基本信息
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "description": "用户ID" },
+                  "name": { "type": "string", "description": "用户姓名" },
+                  "sexCode": { "type": "string", "description": "性别编码" },
+                  "sex": { "type": "string", "description": "性别名称" },
+                  "idCard": { "type": "string", "description": "身份证号" },
+                  "phone": { "type": "string", "description": "电话号码" }
+                }
+              }
+  /familyMembers:
+    /count:
+      get:
+        description: 取得用户家庭成员数量
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "integer"
+                }
+  /collectionDoctors:
+    get:
+      description: 取得用户收藏医生列表
+      is: [secured, serverError]
+      queryParameters:
+        searchName:
+          description: 全文检索条件
+          type: string
+          required: false
+        subjectId:
+          description: 学科ID
+          type: string
+          required: false
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "医生ID" },
+                    "name": { "type": "string", "description": "医生姓名" },
+                    "sexCode": { "type": "string", "description": "性别编码" },
+                    "title": { "type": "string", "description": "职称名称" },
+                    "districtId": { "type": "string", "description": "院区Id" },
+                    "district": { "type": "string", "description": "院区名称" },
+                    "deptId": { "type": "string", "description": "科室Id" },
+                    "dept": { "type": "string", "description": "科室名称" },
+                    "skill": { "type": "string", "description": "擅长" }
+                  }
+                ]
+              }
+    post:
+      description: 添加用户收藏医生
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "doctorId": { "type": "string", "description": "医生Id" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
+    /count:
+      get:
+        description: 取得用户收藏医生数量
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "integer"
+                }
+    /{doctorId}:
+      uriParameters:
+        doctorId:
+          description: 医生Id
+          example: 1
+      get:
+        description: 取得用户收藏医生
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "object",
+                  "properties": {
+                    "doctorId": { "type": "string", "description": "医生Id" }
+                  }
+                }
+      delete:
+        description: 删除用户收藏医生
+        is: [secured, dataError, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+/service:
+  /phone:
+    get:
+      description: 取得服务电话号码
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string"
+              }
+  /userOpinion:
+    post:
+      description: 保存当前登录用户意见
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "opinion": { "type": "string", "description": "意见" }
             }
           }
       responses:
