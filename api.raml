@@ -543,7 +543,8 @@ traits:
                     "amount": { "type": "string", "description": "挂号金额", "example": "7.00" },
                     "registerDate": { "type": "string", "description": "挂号时间" },
                     "statusCode": { "type": "string", "description": "挂号单状态" },
-                    "status": { "type": "string", "description": "状态名称" }
+                    "status": { "type": "string", "description": "状态名称" }，
+                    "orderNum": { "type": "string", "description": "订单号" }
                   }
                 }
       post:
@@ -783,7 +784,106 @@ traits:
                   "phone": { "type": "string", "description": "电话号码" }
                 }
               }
+  /medicalNum:
+    post:
+      description: 成员病历号在线建档
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "memberId": { "type": "string", "description": "成员ID" },
+              "medicalNum": { "type": "string", "description": "病历号（不存在分配一个）" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
+    put:
+      description: 修改成员病历号
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "memberId": { "type": "string", "description": "成员ID" },
+              "medicalNum": { "type": "string", "description": "病历号" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
   /familyMembers:
+    get:
+      description: 取得登录用户家庭成员
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "成员ID" },
+                    "name": { "type": "string", "description": "姓名" },
+                    "sexCode": { "type": "string", "description": "性别编码" },
+                    "sex": { "type": "string", "description": "性别名称" },
+                    "age": { "type": "string", "description": "年龄" },
+                    "idCard": { "type": "string", "description": "身份证号" },
+                    "phone": { "type": "string", "description": "电话号码" },
+                    "medicalNum": { "type": "string", "description": "病历号" },
+                    "memberCode": { "type": "string", "description": "关系编码" },
+                    "member": { "type": "string", "description": "关系名称" },
+                    "patientVisits": { "type": "string", "description": "是否为就诊人" }
+                  }
+                ]
+              }
+    /familyMember:
+      get:
+        description: 取得成员信息
+        is: [secured, serverError]
+        queryParameters:
+          memberId:
+            description: 成员Id，空时返回就诊人
+            type: string
+            required: false
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "description": "成员ID" },
+                    "name": { "type": "string", "description": "姓名" },
+                    "sexCode": { "type": "string", "description": "性别编码" },
+                    "sex": { "type": "string", "description": "性别名称" },
+                    "age": { "type": "string", "description": "年龄" },
+                    "idCard": { "type": "string", "description": "身份证号" },
+                    "phone": { "type": "string", "description": "电话号码" },
+                    "medicalNum": { "type": "string", "description": "病历号" },
+                    "memberCode": { "type": "string", "description": "关系编码" },
+                    "member": { "type": "string", "description": "关系名称" },
+                    "patientVisits": { "type": "string", "description": "是否为就诊人" }
+                  }
+                }
     /count:
       get:
         description: 取得用户家庭成员数量
