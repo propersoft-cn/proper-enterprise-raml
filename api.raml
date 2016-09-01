@@ -394,34 +394,24 @@ traits:
                   }
                 ]
               }
-/patients/patient:
-  get:
-    description: 取得患者信息
-    is: [secured, serverError]
-    queryParameters:
-      memberId:
-        description: 家庭成员Id（没有时返回登录账号就诊人信息）
-        type: string
-        required: false
-    responses:
-      200:
-        body:
-          schema: |
-            {
-              "$schema": "http://json-schema.org/schema",
-              "type": "object",
-              "properties": {
-                "id": { "type": "string", "description": "患者ID" },
-                "name": { "type": "string", "description": "患者姓名" },
-                "sexCode": { "type": "string", "description": "性别编码" },
-                "sex": { "type": "string", "description": "性别名称" },
-                "idCard": { "type": "string", "description": "身份证号" },
-                "phone": { "type": "string", "description": "电话号码" },
-                "memberCode": { "type": "string", "description": "关系代码" },
-                "member": { "type": "string", "description": "关系名称" }
-              }
-            }
 /register:
+  /visitAndBacknumDesc:
+    get:
+      description: 就诊退号说明
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "visit1": { "type": "string", "description": "就诊说明1" },
+                  "visit2": { "type": "string", "description": "就诊说明2" },
+                  "backnum": { "type": "string", "description": "退号说明" }
+                }
+              }
   /agreement:
     get:
       description: 取得挂号须知信息
@@ -520,6 +510,11 @@ traits:
       get:
         description: 取得指定挂号单详细
         is: [secured, serverError]
+        queryParameters:
+          id:
+            description: 挂号单ID
+            type: string
+            required: true
         responses:
           200:
             body:
@@ -530,6 +525,7 @@ traits:
                   "properties": {
                     "id": { "type": "string", "description": "挂号单ID" },
                     "num": { "type": "string", "description": "挂号单号" },
+                    "memberId": { "type": "string", "description": "成员Id" },
                     "patientName": { "type": "string", "description": "患者姓名" },
                     "apptDate": { "type": "string", "description": "预约时间", "example": "2016年07月20日 10:00" },
                     "clinicNum": { "type": "string", "description": "门诊号" },
@@ -543,7 +539,7 @@ traits:
                     "amount": { "type": "string", "description": "挂号金额", "example": "7.00" },
                     "registerDate": { "type": "string", "description": "挂号时间" },
                     "statusCode": { "type": "string", "description": "挂号单状态" },
-                    "status": { "type": "string", "description": "状态名称" }，
+                    "status": { "type": "string", "description": "状态名称" },
                     "orderNum": { "type": "string", "description": "订单号" }
                   }
                 }
@@ -576,6 +572,27 @@ traits:
                     "orderNum": { "type": "string", "description": "订单号" }
                   }
                 }
+      /back:
+        put:
+          description: 退号
+          is: [secured, dataError, serverError]
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "registrationId": { "type": "string", "description": "挂号单ID" }
+                }
+              }
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "string", "description": "空字符串"
+                  }
 /orders/{orderNum}:
   uriParameters:
     orderNum:
@@ -595,7 +612,8 @@ traits:
                 "orderNum": { "type": "string", "description": "订单号" },
                 "name": { "type": "string", "description": "订单名称" },
                 "description": { "type": "string", "description": "订单内容" },
-                "amount": { "type": "string", "description": "金额", "example": "7.00" }
+                "amount": { "type": "string", "description": "金额", "example": "7.00" },
+                "closeTime": { "type": "array", "description": "交易关闭时间", "example": "[30,0]" }
               }
             }
 /medicalReports:
