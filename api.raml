@@ -38,7 +38,7 @@ traits:
   /familyMenberTypes:
     get:
       description: 取得家庭成员类别列表
-      is: [serverError]
+      is: [secured, serverError]
       responses:
         200:
           body:
@@ -49,7 +49,25 @@ traits:
                 "properties": {
                   "{code}": { "type": "object", "description": "类别编码", "properties": {
                     "name": { "type": "string", "description": "类别名称" },
+                    "sexCode": { "type": "string", "description": "性别编码" },
                     "img": { "type": "string", "description": "图片路径" }
+                  }}
+                }
+              }
+  /sexTypes:
+    get:
+      description: 性别列表
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "{code}": { "type": "object", "description": "类别编码", "properties": {
+                    "name": { "type": "string", "description": "类别名称" }
                   }}
                 }
               }
@@ -901,6 +919,75 @@ traits:
                     "member": { "type": "string", "description": "关系名称" },
                     "patientVisits": { "type": "string", "description": "是否为就诊人" }
                   }
+                }
+      post:
+        description: 添加成员信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "姓名" },
+                "sexCode": { "type": "string", "description": "性别编码" },
+                "sex": { "type": "string", "description": "性别名称" },
+                "idCard": { "type": "string", "description": "身份证号" },
+                "phone": { "type": "string", "description": "电话号码" },
+                "memberCode": { "type": "string", "description": "关系编码" },
+                "member": { "type": "string", "description": "关系名称" },
+                "patientVisits": { "type": "string", "description": "是否为就诊人" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+      put:
+        description: 修改成员信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "description": "成员ID" },
+                "name": { "type": "string", "description": "姓名" },
+                "sexCode": { "type": "string", "description": "性别编码" },
+                "sex": { "type": "string", "description": "性别名称" },
+                "idCard": { "type": "string", "description": "身份证号" },
+                "phone": { "type": "string", "description": "电话号码" },
+                "patientVisits": { "type": "string", "description": "是否为就诊人" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+      delete:
+        description: 删除成员信息
+        is: [secured, dataError, serverError]
+        queryParameters:
+          memberId:
+            description: 成员Id
+            type: string
+            required: true
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
                 }
     /count:
       get:
