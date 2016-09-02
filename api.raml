@@ -611,14 +611,19 @@ traits:
                     "$schema": "http://json-schema.org/schema",
                     "type": "string", "description": "空字符串"
                   }
-/orders/{orderNum}:
-  uriParameters:
-    orderNum:
-      description: 订单号
-      example: 1
-  get:
-    description: 取得订单详细
-    is: [secured, serverError]
+/orders:
+  post:
+    description: 添加订单
+    is: [secured, dataError, serverError]
+    body:
+      schema: |
+        {
+          "$schema": "http://json-schema.org/schema",
+          "type": "object",
+          "properties": {
+            "recipeNums": { "type": "array", "description": "处方单号" }
+          }
+        }
     responses:
       200:
         body:
@@ -627,13 +632,32 @@ traits:
               "$schema": "http://json-schema.org/schema",
               "type": "object",
               "properties": {
-                "orderNum": { "type": "string", "description": "订单号" },
-                "name": { "type": "string", "description": "订单名称" },
-                "description": { "type": "string", "description": "订单内容" },
-                "amount": { "type": "string", "description": "金额", "example": "7.00" },
-                "closeTime": { "type": "array", "description": "交易关闭时间", "example": "[30,0]" }
+                "orderNum": { "type": "string", "description": "订单号" }
               }
             }
+  /{orderNum}:
+    uriParameters:
+      orderNum:
+        description: 订单号
+        example: 1
+    get:
+      description: 取得订单详细
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "orderNum": { "type": "string", "description": "订单号" },
+                  "name": { "type": "string", "description": "订单名称" },
+                  "description": { "type": "string", "description": "订单内容" },
+                  "amount": { "type": "string", "description": "金额", "example": "7.00" },
+                  "closeTime": { "type": "array", "description": "交易关闭时间", "example": "[30,0]" }
+                }
+              }
 /medicalReports:
   get:
     description: 取得指定患者检查报告列表
@@ -1131,3 +1155,43 @@ traits:
                 "$schema": "http://json-schema.org/schema",
                 "type": "string", "description": "空字符串"
               }
+/recipes:
+  get:
+    description: 取得患者处方列表
+    is: [secured, serverError]
+    queryParameters:
+      memberId:
+        description: 家庭成员ID，不存在返回默认就诊人处方列表
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "array",
+              "properties": [
+                {
+                  "outpatientNum": { "type": "string", "description": "门诊流水号" },
+                  "outpatientDate": { "type": "string", "description": "门诊时间", "example": "2016年09月01日" },
+                  "recipes": { "type": "array", "description": "门诊处方列表", "properties": [
+                    {
+                      "recipeNum": { "type": "string", "description": "处方号" },
+                      "dept": { "type": "string", "description": "科室" },
+                      "location": { "type": "string", "description": "地点" },
+                      "total": { "type": "string", "description": "金额合计" },
+                      "statusCode": { "type": "string", "description": "支付状态编码" },
+                      "status": { "type": "string", "description": "支付状态" },
+                      "items": { "type": "array", "description": "处方项目列表", "properties": [
+                        {
+                          "name": { "type": "string", "description": "项目名称" },
+                          "amount": { "type": "string", "description": "金额" },
+                          "number": { "type": "integer", "description": "数量" }
+                        }
+                      ]}
+                    }
+                  ]}
+                }
+              ]
+            }
