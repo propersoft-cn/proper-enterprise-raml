@@ -621,7 +621,13 @@ traits:
           "$schema": "http://json-schema.org/schema",
           "type": "object",
           "properties": {
-            "recipeNums": { "type": "array", "description": "处方单号" }
+            "memberId": { "type": "string", "description": "家庭成员Id" },
+            "outpatients": { "type": "array", "properties": [
+              {
+                "outpatientNum": { "type": "string", "description": "门诊单号" },
+                "recipeNums": { "type": "array", "description": "处方号" }
+              }
+            ] }
           }
         }
     responses:
