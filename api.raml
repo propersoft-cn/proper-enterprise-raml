@@ -830,6 +830,18 @@ traits:
                 "type": "string", "description": "空字符串"
               }
 /user:
+  /tokenVal:
+    get:
+      description: 验证token是否有效
+      is: [secured]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
   /userInfo:
     get:
       description: 取得登录用户基本信息
