@@ -341,6 +341,10 @@ traits:
       description: 取得排班医生列表
       is: [serverError]
       queryParameters:
+        pageNo:
+          description: 页码，从1开始，每页多少条后台控制
+          type: integer
+          required: false
         districtId:
           description: 院区Id
           type: string
@@ -1000,9 +1004,6 @@ traits:
               "properties": {
                 "id": { "type": "string", "description": "成员ID" },
                 "name": { "type": "string", "description": "姓名" },
-                "sexCode": { "type": "string", "description": "性别编码" },
-                "sex": { "type": "string", "description": "性别名称" },
-                "idCard": { "type": "string", "description": "身份证号" },
                 "phone": { "type": "string", "description": "电话号码" },
                 "patientVisits": { "type": "string", "description": "是否为就诊人" }
               }
