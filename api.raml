@@ -71,6 +71,24 @@ traits:
                   }}
                 }
               }
+  /feedbackTypes:
+    get:
+      description: 意见反馈状态列表
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "code": { "type": "string", "description": "类别编码" },
+                    "name": { "type": "string", "description": "类别名称"}
+                  }
+                ]
+              }
 /medicalGuide:
   get:
     description: 取得就医指南信息
@@ -1154,6 +1172,33 @@ traits:
                 "type": "string"
               }
   /userOpinion:
+    get:
+      description: 取得登录用户意见列表
+      is: [secured, serverError]
+      queryParameters:
+        feedbackStatus:
+          description: 反馈状态
+          type: string
+          required: false
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "意见ID" },
+                    "createTime": { "type": "string", "description": "意见时间" },
+                    "opinion": { "type": "string", "description": "意见内容" },
+                    "feedbackTime": { "type": "string", "description": 反馈时间" },
+                    "feedback": { "type": "string", "description": "反馈内容" },
+                    "statusCode": { "type": "string", "description": "反馈状态编码" },
+                    "status": { "type": "string", "description": "反馈状态名称" }
+                  }
+                ]
+              }
     post:
       description: 保存当前登录用户意见
       is: [secured, dataError, serverError]
@@ -1173,6 +1218,31 @@ traits:
               {
                 "$schema": "http://json-schema.org/schema",
                 "type": "string", "description": "空字符串"
+              }
+  /{opinionId}:
+    uriParameters:
+      opinionId:
+        description: 意见Id
+        example: 1
+    get:
+      description: 取得用户意见详细
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "description": "意见ID" },
+                  "createTime": { "type": "string", "description": "意见时间" },
+                  "opinion": { "type": "string", "description": "意见内容" },
+                  "feedbackTime": { "type": "string", "description": 反馈时间" },
+                  "feedback": { "type": "string", "description": "反馈内容" },
+                  "statusCode": { "type": "string", "description": "反馈状态编码" },
+                  "status": { "type": "string", "description": "反馈状态名称" }
+                }
               }
 /recipes:
   get:
