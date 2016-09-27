@@ -1262,6 +1262,54 @@ traits:
                     "status": { "type": "string", "description": "反馈状态名称" }
                   }
                 }
+  /feedbackOpinion:
+    get:
+      description: 取得意见列表
+      is: [secured, serverError]
+      queryParameters:
+        feedbackStatus:
+          description: 反馈状态
+          type: string
+          required: false
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "id": { "type": "string", "description": "意见ID" },
+                    "opinionTime": { "type": "string", "description": "意见时间" },
+                    "opinion": { "type": "string", "description": "意见内容" },
+                    "feedbackTime": { "type": "string", "description": "反馈时间" },
+                    "feedback": { "type": "string", "description": "反馈内容" },
+                    "statusCode": { "type": "string", "description": "反馈状态编码" },
+                    "status": { "type": "string", "description": "反馈状态名称" }
+                  }
+                ]
+              }
+    post:
+      description: 保存反馈意见意见
+      is: [secured, dataError, serverError]
+      body:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "description": "用户意见id" }
+            }
+          }
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string", "description": "空字符串"
+              }
 /recipes:
   get:
     description: 取得患者处方列表
@@ -1375,7 +1423,7 @@ traits:
               }
 /pay/ali/prepayInfo:
   post:
-    description: 获取支付宝预支付信息
+    description: 获取微信预支付信息
     is: [secured, dataError, serverError]
     body:
       schema: |
