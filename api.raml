@@ -538,7 +538,7 @@ traits:
                   "properties": [
                     {
                       "id": { "type": "string", "description": "挂号单ID" },
-                      "apptDate": { "type": "string", "description": "预约时间", "example": "2016年07月20日 10:00" },
+                      "apptDate": { "type": "string", "description": "就诊时间", "example": "2016年07月20日 10:00" },
                       "clinicNum": { "type": "string", "description": "门诊号" },
                       "hospital": { "type": "string", "description": "医院名称" },
                       "districtId": { "type": "string", "description": "院区Id" },
@@ -575,7 +575,7 @@ traits:
                     "num": { "type": "string", "description": "挂号单号" },
                     "memberId": { "type": "string", "description": "成员Id" },
                     "patientName": { "type": "string", "description": "患者姓名" },
-                    "apptDate": { "type": "string", "description": "预约时间", "example": "2016年07月20日 10:00" },
+                    "apptDate": { "type": "string", "description": "就诊时间", "example": "2016年07月20日 10:00" },
                     "clinicNum": { "type": "string", "description": "门诊号" },
                     "hospital": { "type": "string", "description": "医院名称" },
                     "districtId": { "type": "string", "description": "院区Id" },
@@ -1237,31 +1237,31 @@ traits:
                 "$schema": "http://json-schema.org/schema",
                 "type": "string", "description": "空字符串"
               }
-  /{opinionId}:
-    uriParameters:
-      opinionId:
-        description: 意见Id
-        example: 1
-    get:
-      description: 取得用户意见详细
-      is: [secured, serverError]
-      responses:
-        200:
-          body:
-            schema: |
-              {
-                "$schema": "http://json-schema.org/schema",
-                "type": "object",
-                "properties": {
-                  "id": { "type": "string", "description": "意见ID" },
-                  "opinionTime": { "type": "string", "description": "意见时间" },
-                  "opinion": { "type": "string", "description": "意见内容" },
-                  "feedbackTime": { "type": "string", "description": "反馈时间" },
-                  "feedback": { "type": "string", "description": "反馈内容" },
-                  "statusCode": { "type": "string", "description": "反馈状态编码" },
-                  "status": { "type": "string", "description": "反馈状态名称" }
+    /{opinionId}:
+      uriParameters:
+        opinionId:
+          description: 意见Id
+          example: 1
+      get:
+        description: 取得用户意见详细
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "description": "意见ID" },
+                    "opinionTime": { "type": "string", "description": "意见时间" },
+                    "opinion": { "type": "string", "description": "意见内容" },
+                    "feedbackTime": { "type": "string", "description": "反馈时间" },
+                    "feedback": { "type": "string", "description": "反馈内容" },
+                    "statusCode": { "type": "string", "description": "反馈状态编码" },
+                    "status": { "type": "string", "description": "反馈状态名称" }
+                  }
                 }
-              }
 /recipes:
   get:
     description: 取得患者处方列表
