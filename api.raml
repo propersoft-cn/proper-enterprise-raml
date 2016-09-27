@@ -767,6 +767,15 @@ traits:
                 }
               }
 /permission:
+  /loginPrompt:
+    get:
+      description: 取得登录页面提示信息
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /login:
     post:
       description: 用户登录
@@ -1199,7 +1208,7 @@ traits:
                 "properties": [
                   {
                     "id": { "type": "string", "description": "意见ID" },
-                    "createTime": { "type": "string", "description": "意见时间" },
+                    "opinionTime": { "type": "string", "description": "意见时间" },
                     "opinion": { "type": "string", "description": "意见内容" },
                     "feedbackTime": { "type": "string", "description": "反馈时间" },
                     "feedback": { "type": "string", "description": "反馈内容" },
@@ -1245,7 +1254,7 @@ traits:
                 "type": "object",
                 "properties": {
                   "id": { "type": "string", "description": "意见ID" },
-                  "createTime": { "type": "string", "description": "意见时间" },
+                  "opinionTime": { "type": "string", "description": "意见时间" },
                   "opinion": { "type": "string", "description": "意见内容" },
                   "feedbackTime": { "type": "string", "description": "反馈时间" },
                   "feedback": { "type": "string", "description": "反馈内容" },
