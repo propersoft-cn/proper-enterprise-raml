@@ -332,6 +332,10 @@ traits:
           description: 日期
           type: string
           required: false
+        districtId:
+          description: 院区ID
+          type: string
+          required: false
       responses:
         200:
           body:
@@ -419,6 +423,10 @@ traits:
           description: 医生ID
           type: string
           required: true
+        districtId:
+          description: 院区ID
+          type: string
+          required: false
       responses:
         200:
           body:
@@ -1192,7 +1200,7 @@ traits:
                     "id": { "type": "string", "description": "意见ID" },
                     "createTime": { "type": "string", "description": "意见时间" },
                     "opinion": { "type": "string", "description": "意见内容" },
-                    "feedbackTime": { "type": "string", "description": 反馈时间" },
+                    "feedbackTime": { "type": "string", "description": "反馈时间" },
                     "feedback": { "type": "string", "description": "反馈内容" },
                     "statusCode": { "type": "string", "description": "反馈状态编码" },
                     "status": { "type": "string", "description": "反馈状态名称" }
@@ -1238,7 +1246,7 @@ traits:
                   "id": { "type": "string", "description": "意见ID" },
                   "createTime": { "type": "string", "description": "意见时间" },
                   "opinion": { "type": "string", "description": "意见内容" },
-                  "feedbackTime": { "type": "string", "description": 反馈时间" },
+                  "feedbackTime": { "type": "string", "description": "反馈时间" },
                   "feedback": { "type": "string", "description": "反馈内容" },
                   "statusCode": { "type": "string", "description": "反馈状态编码" },
                   "status": { "type": "string", "description": "反馈状态名称" }
