@@ -1423,7 +1423,7 @@ traits:
               }
 /pay/ali/prepayInfo:
   post:
-    description: 获取微信预支付信息
+    description: 获取支付宝预支付信息
     is: [secured, dataError, serverError]
     body:
       schema: |
@@ -1451,7 +1451,7 @@ traits:
             }
 /pay/weixin/prepayInfo:
   post:
-    description: 获取支付宝预支付信息
+    description: 获取微信预支付信息
     is: [secured, dataError, serverError]
     body:
       schema: |
