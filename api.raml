@@ -1181,6 +1181,48 @@ traits:
                   "type": "string", "description": "空字符串"
                 }
 /service:
+  /appName:
+    get:
+      description: 取得app名称
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "string"
+              }
+  /carouselPhoto:
+    get:
+      description: 取得照片轮播图片
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "name": { "type": "string", "description": "图片名称" },
+                    "img": { "type": "string", "description": "图片字符串" }
+                  }
+                ]
+              }
+    /version:
+      get:
+        description: 取得照片轮播版本号
+        is: [serverError]
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string"
+                }
   /phone:
     get:
       description: 取得服务电话号码
