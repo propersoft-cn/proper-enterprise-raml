@@ -218,6 +218,10 @@ traits:
         description: 学科Id（没有时返回一级学科及以下所有学科，存在时返回指定学科及以下所有学科）
         type: string
         required: false
+      type:
+        description: 挂号类型，区分当日挂号（2）或预约挂号（1）
+        type: string
+        required: true
     responses:
       200:
         body:
