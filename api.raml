@@ -705,6 +705,10 @@ traits:
     description: 取得指定患者检查报告列表
     is: [secured, serverError]
     queryParameters:
+      category:
+        description: 报告类别
+        type: string
+        required: true
       memberId:
         description: 家庭成员Id（没有时返回登录账号就诊人信息）
         type: string
@@ -734,6 +738,15 @@ traits:
                 }
               ]
             }
+  /prompt:
+    get:
+      description: 报告列表温馨提示
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /{category}/{reportId}:
     uriParameters:
       category:
@@ -743,7 +756,7 @@ traits:
         description: 报告Id
         example: 1
     get:
-      description: 取得指定检查报告类别1详细
+      description: 取得指定检查报告类别1详细，类别2是图片(没有返回空字符串即可)
       is: [secured, serverError]
       responses:
         200:
