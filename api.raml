@@ -341,7 +341,7 @@ traits:
           type: string
           required: false
         isAppointment:
-          description: 是否为预约挂号
+          description: 是否为预约挂号（1:预约;0:当日）
           type: string
           required: true
       responses:
@@ -400,7 +400,7 @@ traits:
           type: string
           required: false
         isAppointment:
-          description: 是否为预约挂号
+          description: 是否为预约挂号（1:预约;0:当日）
           type: string
           required: true
       responses:
@@ -444,7 +444,7 @@ traits:
           type: string
           required: false
         isAppointment:
-          description: 是否为预约挂号
+          description: 是否为预约挂号（1:预约;0:当日）
           type: string
           required: true
       responses:
@@ -622,7 +622,7 @@ traits:
               "type": "object",
               "properties": {
                 "patientId": { "type": "string", "description": "挂号患者ID" },
-                "isAppointment": { "type": "string", "description": "是否预约" },
+                "isAppointment": { "type": "string", "description": "是否预约（1:预约;0:当日）" },
                 "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
                 "doctorId": { "type": "string", "description": "医生ID" },
                 "categoryCode": { "type": "string", "description": "挂号类别编码" },
@@ -712,7 +712,7 @@ traits:
                   "name": { "type": "string", "description": "订单名称" },
                   "description": { "type": "string", "description": "订单内容" },
                   "amount": { "type": "string", "description": "金额", "example": "7.00" },
-                  "isAppointment": { "type": "string", "description": "挂号是否为预约" },
+                  "isAppointment": { "type": "string", "description": "挂号是否为预约（1:预约;0:当日）" },
                   "closeTime": { "type": "array", "description": "交易关闭时间", "example": "[30,0]" }
                 }
               }
