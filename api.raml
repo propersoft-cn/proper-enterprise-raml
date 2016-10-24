@@ -340,6 +340,14 @@ traits:
           description: 院区ID
           type: string
           required: false
+        subjectId:
+          description: 学科ID
+          type: string
+          required: false
+        isAppointment:
+          description: 是否为预约挂号（1:预约;0:当日）
+          type: string
+          required: true
       responses:
         200:
           body:
@@ -395,6 +403,10 @@ traits:
           description: 排班结束时间
           type: string
           required: false
+        isAppointment:
+          description: 是否为预约挂号（1:预约;0:当日）
+          type: string
+          required: true
       responses:
         200:
           body:
@@ -414,7 +426,8 @@ traits:
                     "dept": { "type": "string", "description": "科室名称" },
                     "skill": { "type": "string", "description": "擅长" },
                     "total": { "type": "integer", "description": "可挂号总数" },
-                    "overCount": { "type": "integer", "description": "剩余挂号数" }
+                    "overCount": { "type": "integer", "description": "剩余挂号数" },
+                    "unallowed": { "type": "string", "description": "医生不能挂号异常情况说明" }
                   }
                 ]
               }
@@ -435,6 +448,10 @@ traits:
           description: 院区ID
           type: string
           required: false
+        isAppointment:
+          description: 是否为预约挂号（1:预约;0:当日）
+          type: string
+          required: true
       responses:
         200:
           body:
@@ -610,7 +627,7 @@ traits:
               "type": "object",
               "properties": {
                 "patientId": { "type": "string", "description": "挂号患者ID" },
-                "isAppointment": { "type": "string", "description": "是否预约" },
+                "isAppointment": { "type": "string", "description": "是否预约（1:预约;0:当日）" },
                 "registerDate": { "type": "string", "description": "挂号时间", "example": "{2016-08-10 09:10|2016-08-10}" },
                 "doctorId": { "type": "string", "description": "医生ID" },
                 "categoryCode": { "type": "string", "description": "挂号类别编码" },
@@ -700,7 +717,7 @@ traits:
                   "name": { "type": "string", "description": "订单名称" },
                   "description": { "type": "string", "description": "订单内容" },
                   "amount": { "type": "string", "description": "金额", "example": "7.00" },
-                  "isAppointment": { "type": "string", "description": "挂号是否为预约" },
+                  "isAppointment": { "type": "string", "description": "挂号是否为预约（1:预约;0:当日）" },
                   "closeTime": { "type": "array", "description": "交易关闭时间", "example": "[30,0]" }
                 }
               }
@@ -709,6 +726,10 @@ traits:
     description: 取得指定患者检查报告列表
     is: [secured, serverError]
     queryParameters:
+      category:
+        description: 报告类别
+        type: string
+        required: true
       memberId:
         description: 家庭成员Id（没有时返回登录账号就诊人信息）
         type: string
@@ -738,6 +759,15 @@ traits:
                 }
               ]
             }
+  /prompt:
+    get:
+      description: 报告列表温馨提示
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              { "$schema": "http://json-schema.org/schema", "type": "string" }
   /{category}/{reportId}:
     uriParameters:
       category:
@@ -747,7 +777,7 @@ traits:
         description: 报告Id
         example: 1
     get:
-      description: 取得指定检查报告类别1详细
+      description:  取得指定检查报告类别1详细，类别2是图片(没有返回空字符串即可)
       is: [secured, serverError]
       responses:
         200:
