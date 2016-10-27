@@ -1344,8 +1344,24 @@ traits:
       description: 取得意见列表
       is: [secured, serverError]
       queryParameters:
-        feedbackStatus:
+        userName:
+          description: 用户姓名
+          type: string
+          required: false
+        userTel:
+            description: 用户手机号
+            type: string
+            required: false
+        statusCode:
           description: 反馈状态
+          type: string
+          required: false
+        opinion:
+          description: 用户意见
+          type: string
+          required: false
+        feedback:
+          description: 反馈意见
           type: string
           required: false
       responses:
@@ -1354,21 +1370,26 @@ traits:
             schema: |
               {
                 "$schema": "http://json-schema.org/schema",
-                "type": "array",
-                "properties": [
+                "type": "Object",
+                "properties":
                   {
-                    "id": { "type": "string", "description": "意见ID" },
-                    "opinionTime": { "type": "string", "description": "意见时间" },
-                    "opinion": { "type": "string", "description": "意见内容" },
-                    "feedbackTime": { "type": "string", "description": "反馈时间" },
-                    "feedback": { "type": "string", "description": "反馈内容" },
-                    "statusCode": { "type": "string", "description": "反馈状态编码" },
-                    "status": { "type": "string", "description": "反馈状态名称" }
-                  }
-                ]
+                    "count": { "type": "int", "description": "反馈意见总数" },
+                    "data" :
+                    [
+                      {
+                        "id": { "type": "string", "description": "意见ID" },
+                        "opinionTime": { "type": "string", "description": "意见时间" },
+                        "opinion": { "type": "string", "description": "意见内容" },
+                        "feedbackTime": { "type": "string", "description": "反馈时间" },
+                        "feedback": { "type": "string", "description": "反馈内容" },
+                        "statusCode": { "type": "string", "description": "反馈状态编码" },
+                        "status": { "type": "string", "description": "反馈状态名称" }
+                      }
+                    ]
+                 }
               }
-    post:
-      description: 保存反馈意见意见
+    put:
+      description: 保存反馈意见
       is: [secured, dataError, serverError]
       body:
         schema: |
@@ -1376,7 +1397,8 @@ traits:
             "$schema": "http://json-schema.org/schema",
             "type": "object",
             "properties": {
-              "id": { "type": "string", "description": "用户意见id" }
+              "id": { "type": "string", "description": "用户意见id" },
+              "feedback": { "type": "string", "description": "反馈意见" }
             }
           }
       responses:
