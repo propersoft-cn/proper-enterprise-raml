@@ -1364,6 +1364,14 @@ traits:
           description: 反馈意见
           type: string
           required: false
+        pageNo:
+          description: 当前页码
+          type: string
+          required: true
+        pageSize:
+          description: 每页数量
+          type: string
+          required: true
       responses:
         200:
           body:
@@ -1581,3 +1589,133 @@ traits:
                 "sign": { "type": "string", "description": "签名" }
               }
             }
+/prompt:
+  /tips:
+    get:
+      description: 取得意见列表
+      is: [secured, serverError]
+      queryParameters:
+        infoType:
+          description: 温馨提示类型编码
+          type: string
+          required: false
+        typeName:
+            description: 温馨提示类型名称
+            type: string
+            required: false
+        info:
+          description: 温馨提示内容
+          type: string
+          required: false
+        pageNo:
+          description: 当前页码
+          type: string
+          required: true
+        pageSize:
+          description: 每页数量
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "Object",
+                "properties":
+                  {
+                    "count": { "type": "int", "description": "温馨提示总数" },
+                    "data" :
+                    [
+                      {
+                      "id": { "type": "string", "description": "温馨提示ID" },
+                      "infoType": { "type": "string", "description": "温馨提示类型编码" },
+                      "typeName": { "type": "string", "description": "温馨提示类型名称" },
+                      "info": { "type": "string", "description": "温馨提示内容" }
+                      }
+                    ]
+                 }
+              }
+    post:
+        description: 新增温馨提示信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "infoType": { "type": "string", "description": "温馨提示类型编码" },
+                "typeName": { "type": "string", "description": "温馨提示类型名称" },
+                "info": { "type": "string", "description": "温馨提示内容" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    put:
+        description: 更新温馨提示信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "description": "温馨提示ID" },
+                "infoType": { "type": "string", "description": "温馨提示类型编码" },
+                "typeName": { "type": "string", "description": "温馨提示类型名称" },
+                "info": { "type": "string", "description": "温馨提示内容" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    delete:
+          description: 删除温馨提示信息
+          is: [secured, dataError, serverError]
+          queryParameters:
+            id:
+              description: 温馨提示Id
+              type: string
+              required: true
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "string", "description": "空字符串"
+                  }
+    /{id}:
+        uriParameters:
+          id:
+            description: 温馨提示ID
+            example: 1
+        get:
+          description: 取得温馨提示详细
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "description": "温馨提示ID" },
+                      "infoType": { "type": "string", "description": "温馨提示类型编码" },
+                      "typeName": { "type": "string", "description": "温馨提示类型名称" },
+                      "info": { "type": "string", "description": "温馨提示内容" }
+                    }
+                  }
