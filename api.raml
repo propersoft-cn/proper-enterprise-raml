@@ -89,6 +89,24 @@ traits:
                   }
                 ]
               }
+  /districTypes:
+    get:
+      description: 院区列表
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "code": { "type": "string", "description": "院区编码" },
+                    "name": { "type": "string", "description": "院区名称"}
+                  }
+                ]
+              }
 /medicalGuide:
   get:
     description: 取得就医指南信息
@@ -1685,8 +1703,8 @@ traits:
           description: 删除温馨提示信息
           is: [secured, dataError, serverError]
           queryParameters:
-            id:
-              description: 温馨提示Id
+            ids:
+              description: 温馨提示Id列表(使用","分割)
               type: string
               required: true
           responses:
@@ -1717,5 +1735,135 @@ traits:
                       "infoType": { "type": "string", "description": "温馨提示类型编码" },
                       "typeName": { "type": "string", "description": "温馨提示类型名称" },
                       "info": { "type": "string", "description": "温馨提示内容" }
+                    }
+                  }
+/registration:
+  /rules:
+    get:
+      description: 取得挂号规则列表
+      is: [secured, serverError]
+      queryParameters:
+        catalogue:
+          description: 挂号规则分类
+          type: string
+          required: false
+        name:
+            description: 挂号规则名称
+            type: string
+            required: false
+        rule:
+          description: 挂号规则内容
+          type: string
+          required: false
+        pageNo:
+          description: 当前页码
+          type: string
+          required: true
+        pageSize:
+          description: 每页数量
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "Object",
+                "properties":
+                  {
+                    "count": { "type": "int", "description": "挂号规则列表总数" },
+                    "data" :
+                    [
+                      {
+                      "id": { "type": "string", "description": "挂号规则ID" },
+                      "catalogue": { "type": "string", "description": "挂号规则分类" },
+                      "name": { "type": "string", "description": "挂号规则名称" },
+                      "rule": { "type": "string", "description": "挂号规则内容" }
+                      }
+                    ]
+                 }
+              }
+    post:
+        description: 新增挂号规则信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "catalogue": { "type": "string", "description": "挂号规则目录" },
+                "name": { "type": "string", "description": "挂号规则名称" },
+                "rule": { "type": "string", "description": "挂号规则内容" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    put:
+        description: 更新挂号规则信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "description": "挂号规则ID" },
+                "catalogue": { "type": "string", "description": "挂号规则分类" },
+                "name": { "type": "string", "description": "挂号规则名称" },
+                "rule": { "type": "string", "description": "挂号规则内容" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    delete:
+          description: 删除挂号规则信息
+          is: [secured, dataError, serverError]
+          queryParameters:
+            ids:
+              description: 挂号规则Id列表(使用","分割)
+              type: string
+              required: true
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "string", "description": "空字符串"
+                  }
+    /{id}:
+        uriParameters:
+          id:
+            description: 挂号规则ID
+            example: 1
+        get:
+          description: 取得挂号规则详细
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "description": "挂号规则ID" },
+                      "catalogue": { "type": "string", "description": "挂号规则分类" },
+                      "name": { "type": "string", "description": "挂号规则名称" },
+                      "rule": { "type": "string", "description": "挂号规则内容" }
                     }
                   }
