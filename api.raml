@@ -89,6 +89,24 @@ traits:
                   }
                 ]
               }
+  /districTypes:
+    get:
+      description: 院区列表
+      is: [serverError]
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "array",
+                "properties": [
+                  {
+                    "code": { "type": "string", "description": "院区编码" },
+                    "name": { "type": "string", "description": "院区名称"}
+                  }
+                ]
+              }
 /medicalGuide:
   get:
     description: 取得就医指南信息
@@ -1201,8 +1219,7 @@ traits:
             "$schema": "http://json-schema.org/schema",
             "type": "object",
             "properties": {
-              "memberId": { "type": "string", "description": "成员ID" },
-              "medicalNum": { "type": "string", "description": "病历号（不存在分配一个）" }
+              "memberId": { "type": "string", "description": "成员ID" }
             }
           }
       responses:
