@@ -89,24 +89,6 @@ traits:
                   }
                 ]
               }
-  /districTypes:
-    get:
-      description: 院区列表
-      is: [serverError]
-      responses:
-        200:
-          body:
-            schema: |
-              {
-                "$schema": "http://json-schema.org/schema",
-                "type": "array",
-                "properties": [
-                  {
-                    "code": { "type": "string", "description": "院区编码" },
-                    "name": { "type": "string", "description": "院区名称"}
-                  }
-                ]
-              }
 /medicalGuide:
   get:
     description: 取得就医指南信息
@@ -150,45 +132,16 @@ traits:
                 }
               ]
             }
-/hospitalNavigation/builds:
-  get:
-    description: 取得各院区楼列表
-    is: [serverError]
-    queryParameters:
-      districtId:
-        description: 院区ID（没有时返回所有院区的楼）
-        type: string
-        required: false
-    responses:
-      200:
-        body:
-          schema: |
-            {
-              "$schema": "http://json-schema.org/schema",
-              "type": "array",
-              "properties": [
-                {
-                  "id": { "type": "string", "description": "院区ID" },
-                  "name": { "type": "string", "description": "院区名称" },
-                  "builds": { "type": "array", "description": "楼列表", "properties": [
-                    {
-                      "id": { "type": "string", "description": "楼ID" },
-                      "name": { "type": "string", "description": "楼名称" },
-                      "function": { "type": "string", "description": "楼功能" }
-                    }
-                  ]}
-                }
-              ]
-            }
-  /floors:
+/hospitalNavigation:
+  /builds:
     get:
-      description: 取得各楼层介绍列表
+      description: App端取得各院区楼列表
       is: [serverError]
       queryParameters:
-        buildId:
-          description: 楼ID
+        districtId:
+          description: 院区ID（没有时返回所有院区的楼）
           type: string
-          required: true
+          required: false
       responses:
         200:
           body:
@@ -198,12 +151,295 @@ traits:
                 "type": "array",
                 "properties": [
                   {
-                    "id": { "type": "string", "description": "层ID" },
-                    "name": { "type": "string", "description": "层名称" },
-                    "depts": { "type": "array", "description": "层内科室" }
+                    "id": { "type": "string", "description": "院区ID" },
+                    "name": { "type": "string", "description": "院区名称" },
+                    "builds": { "type": "array", "description": "楼列表", "properties": [
+                      {
+                        "id": { "type": "string", "description": "楼ID" },
+                        "name": { "type": "string", "description": "楼名称" },
+                        "function": { "type": "string", "description": "楼功能" }
+                      }
+                    ]}
                   }
                 ]
               }
+    /floors:
+      get:
+        description: App端取得各楼层介绍列表
+        is: [serverError]
+        queryParameters:
+          buildId:
+            description: 楼ID
+            type: string
+            required: true
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "array",
+                  "properties": [
+                    {
+                      "id": { "type": "string", "description": "层ID" },
+                      "name": { "type": "string", "description": "层名称" },
+                      "depts": { "type": "array", "description": "层内科室" }
+                    }
+                  ]
+                }
+  /build:
+    get:
+      description: Web端取得各院区楼列表
+      is: [serverError]
+      queryParameters:
+        districtCode:
+          description: 院区ID（没有时返回所有院区的楼）
+          type: string
+          required: false
+        buildingName:
+          description: 楼宇名称
+          type: string
+          required: false
+        pageNo:
+          description: 当前页码
+          type: string
+          required: true
+        pageSize:
+          description: 每页数量
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "Object",
+                "properties":
+                  {
+                    "count": { "type": "int", "description": "楼宇列表总数" },
+                    "data" :
+                    [
+                      {
+                      "id": { "type": "string", "description": "ID" },
+                      "districtCode": { "type": "string", "description": "院区ID" },
+                      "buildingCode": { "type": "string", "description": "楼宇ID" },
+                      "buildingName": { "type": "string", "description": "楼宇名称" }
+                      }
+                    ]
+                 }
+              }
+    post:
+        description: Web端新增楼宇信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "districtCode": { "type": "string", "description": "院区编码" },
+                "buildingName": { "type": "string", "description": "楼宇名称" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    put:
+        description: Web端更新楼宇信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "districtCode": { "type": "string", "description": "院区ID" },
+                "buildingCode": { "type": "string", "description": "楼宇ID" },
+                "buildingName": { "type": "string", "description": "楼宇名称" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    delete:
+          description: Web端删除楼宇信息
+          is: [secured, dataError, serverError]
+          queryParameters:
+            ids:
+              description: ID列表(使用","分割)
+              type: string
+              required: true
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "string", "description": "空字符串"
+                  }
+    /{buildingId}:
+        uriParameters:
+          buildingId:
+            description: 楼宇ID
+            example: 1
+        get:
+          description: 取得楼宇详细
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "object",
+                    "properties": {
+                      "districtCode": { "type": "string", "description": "院区ID" },
+                      "buildingCode": { "type": "string", "description": "楼宇ID" },
+                      "buildingName": { "type": "string", "description": "楼宇名称" }
+                    }
+                  }
+  /floor:
+    get:
+      description: Web端取得各楼层科室列表
+      is: [serverError]
+      queryParameters:
+        floorParentId:
+          description: 楼层所在楼宇ID
+          type: string
+          required: false
+        deptName:
+          description: 科室名称
+          type: string
+          required: false
+        pageNo:
+          description: 当前页码
+          type: string
+          required: true
+        pageSize:
+          description: 每页数量
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            schema: |
+              {
+                "$schema": "http://json-schema.org/schema",
+                "type": "Object",
+                "properties":
+                  {
+                    "count": { "type": "int", "description": "楼宇列表总数" },
+                    "data" :
+                    [
+                      {
+                      "floorParentId": { "type": "string", "description": "楼层所在楼宇ID" },
+                      "fid": { "type": "string", "description": "楼层记录ID" },
+                      "floorId": { "type": "string", "description": "楼层ID" },
+                      "floorName": { "type": "string", "description": "楼层名称" },
+                      "did": { "type": "string", "description": "科室记录ID" },
+                      "deptId": { "type": "string", "description": "楼层科室信息ID" },
+                      "deptName": { "type": "string", "description": "楼层科室信息" }
+                      }
+                    ]
+                 }
+              }
+    post:
+        description: Web端新增楼层科室信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "floorParentId": { "type": "string", "description": "楼层所属楼宇ID" },
+                "floorName": { "type": "string", "description": "楼层名称" },
+                "deptName": { "type": "string", "description": "科室名称" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    put:
+        description: Web端更新楼层科室信息
+        is: [secured, dataError, serverError]
+        body:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/schema",
+              "type": "object",
+              "properties": {
+                "floorId": { "type": "string", "description": "楼层ID" },
+                "floorName": { "type": "string", "description": "楼层名称" },
+                "deptId": { "type": "string", "description": "科室ID" },
+                "deptName": { "type": "string", "description": "科室名称" }
+              }
+            }
+        responses:
+          200:
+            body:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/schema",
+                  "type": "string", "description": "空字符串"
+                }
+    delete:
+          description: Web端删除楼层科室信息
+          is: [secured, dataError, serverError]
+          queryParameters:
+            ids:
+              description: 楼层科室ID列表(使用","分割)
+              type: string
+              required: true
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "string", "description": "空字符串"
+                  }
+    /{floorId}:
+        uriParameters:
+          floorId:
+            description: 楼层ID
+            example: 1
+        get:
+          description: 取得楼宇详细d
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                schema: |
+                  {
+                    "$schema": "http://json-schema.org/schema",
+                    "type": "object",
+                    "properties": {
+                      "floorParentId": { "type": "string", "description": "楼层所在楼宇ID" },
+                      "fid": { "type": "string", "description": "楼层记录ID" },
+                      "floorId": { "type": "string", "description": "楼层ID" },
+                      "floorName": { "type": "string", "description": "楼层名称" },
+                      "did": { "type": "string", "description": "科室记录ID" },
+                      "deptId": { "type": "string", "description": "楼层科室信息ID" },
+                      "deptName": { "type": "string", "description": "楼层科室信息" }
+                    }
+                  }
 /organization:
   /districts:
     get:
