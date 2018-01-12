@@ -1,0 +1,8 @@
+#%RAML 1.0 Trait
+description: 用户无权限返回错误
+responses:
+  401:
+    body:
+      text/plain:
+        example: |
+          { "type": "string", "description": "用户未登录" }
