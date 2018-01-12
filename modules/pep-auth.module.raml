@@ -150,9 +150,12 @@ traits:
             "type": "object",
             "properties": {
               "username": { "type": "string", "description": "用户名" },
+              "name": { "type": "string", "description": "显示名" },
               "password": { "type": "string", "description": "密码" },
               "email": { "type": "string", "description": "邮箱" },
-              "superuser": { "type": "string", "description": "是否为超级用户" }
+              "phone": { "type": "string", "description": "手机号" },
+              "valid": { "type": "boolean", "description": "是否有效" },
+              "superuser": { "type": "boolean", "description": "是否为超级用户" }
             }
           }
       responses:
