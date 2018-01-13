@@ -1,0 +1,323 @@
+#%RAML 1.0
+title: auth模块
+mediaType: application/json
+traits:
+  secured: !include ../traits/secured.trait.raml
+  dataError: !include ../traits/dataError.trait.raml
+  serverError: !include ../traits/serverError.trait.raml
+/auth:
+  /login:
+    post:
+      description: 用户登录
+      is: [secured, dataError, serverError]
+      body:
+        example: |
+          {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string", "description": "用户名" },
+              "pwd": { "type": "string", "description": "密码" }
+            }
+          }
+      responses:
+        201:
+          body:
+            text/plain:
+              example: |
+                {
+                  "type": "string", "description": "用户token"
+                }
+  /menus:
+    get:
+      description: 获取用户菜单
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            text/plain:
+              example: |
+                {
+                  "type": "array",
+                    "properties": [
+                      {
+                        "icon": { "type": "string", "description": "菜单图标样式名称" },
+                        "name": { "type": "string", "description": "菜单名称" },
+                        "route": { "type": "string", "description": "前端路径" },
+                        "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" }
+                      }
+                    ]
+                }
+  /resources:
+    post:
+      description: 新增用户资源
+      is: [secured, dataError, serverError]
+      body:
+        example: |
+          {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "名称" },
+              "url": { "type": "string", "description": "权限对应的Url地址" },
+              "method": { "type": "string", "description": "请求方法" }
+            }
+          }
+      responses:
+        201:
+          body:
+            text/plain:
+              example: |
+                {
+                  "type": "string", "description": "字符串"
+                }
+    /{resourceId}:
+      uriParameters:
+        resourceId:
+          description: 资源ID
+          example: 1
+      get:
+        description: 取得指定用户ID的用户信息
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+              example: |
+                {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string", "description": "资源 URL" },
+                    "method": { "type": "string", "description": "资源 Method" },
+                    "name": { "type": "string", "description": "资源名称" },
+                    "dataRestrainEntities": { "type": "array", "properties": [
+                      {
+                        "name": { "type": "string", "description": "数据约束名称" },
+                        "tableName": { "type": "string", "description": "数据约束作用表名" },
+                        "sqlStr": { "type": "string", "description": "数据约束具体 SQL" },
+                        "filterName": { "type": "string", "description": "数据对象中定义的 Filter 名称" }
+                      }
+                    ] },
+                    "menuEntities": { "type": "array", "properties": [
+                      {
+                        "name": { "type": "string", "description": "菜单名称" },
+                        "route": { "type": "string", "description": "菜单对应的前端路径" },
+                        "parent": { "type": "object", "description": "上级菜单" },
+                        "parentId": { "type": "string", "description": "上级菜单 ID" },
+                        "application": { "type": "object", "description": "菜单所属应用，即最上级的菜单" },
+                        "root": { "type": "boolean", "description": "是否是根节点D" },
+                        "leaf": { "type": "boolean", "description": "是否是叶子节点" },
+                        "children": { "type": "array", "description": "子菜单集合" },
+                        "resources": { "type": "array", "description": "菜单对应的资源集合" },
+                        "sequenceNumber": { "type": "integer", "description": "菜单排序号（同一级别内）" },
+                        "icon": { "type": "string", "description": "菜单图标样式名称" },
+                        "roles": { "type": "array", "description": "拥有此菜单权限的角色集合" }
+                      }
+                    ] }
+                  }
+                }
+      put:
+        description: 更新指定资源ID的资源信息
+        is: [secured, dataError, serverError]
+        body:
+          example: |
+            {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "名称" },
+                "url": { "type": "string", "description": "权限对应的Url地址" },
+                "method": { "type": "string", "description": "请求方法" }
+              }
+            }
+        responses:
+          200:
+            body:
+              text/plain:
+                example: |
+                  {
+                    "type": "string", "description": "字符串"
+                  }
+      delete:
+        description: 删除指定资源ID的资源信息
+        is: [secured, dataError, serverError]
+        responses:
+          204:
+          404:
+  /users:
+    post:
+      description: 新增用户
+      is: [secured, dataError, serverError]
+      body:
+        example: |
+          {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string", "description": "用户名" },
+              "name": { "type": "string", "description": "显示名" },
+              "password": { "type": "string", "description": "密码" },
+              "email": { "type": "string", "description": "邮箱" },
+              "phone": { "type": "string", "description": "手机号" },
+              "valid": { "type": "boolean", "description": "是否有效" },
+              "superuser": { "type": "boolean", "description": "是否为超级用户" }
+            }
+          }
+      responses:
+        201:
+          body:
+            text/plain:
+              example: |
+                {
+                  "type": "string", "description": "字符串"
+                }
+    /{userId}:
+      uriParameters:
+        userId:
+          description: 用户ID
+          example: 1
+      get:
+        description: 取得指定用户ID的用户信息
+        is: [secured, serverError]
+        responses:
+          200:
+            body:
+            example: |
+              {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "description": "用户名" },
+                  "password": { "type": "string", "description": "密码" },
+                  "email": { "type": "string", "description": "邮箱" },
+                  "superuser": { "type": "string", "description": "是否为超级用户" },
+                  "userGroups": { "type": "array", "properties": [
+                    {
+                      "name": { "type": "string", "description": "用户组名称" },
+                      "description": { "type": "string", "description": "用户组描述信息" },
+                      "seq": { "type": "integer", "description": "顺序" },
+                      "users": { "type": "array", "description": "用户组下用户集合" }
+                    }
+                  ] }
+                }
+              }
+      put:
+        description: 更新指定用户ID的用户信息
+        is: [secured, dataError, serverError]
+        body:
+          example: |
+            {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "名称" },
+                "url": { "type": "string", "description": "权限对应的Url地址" },
+                "method": { "type": "string", "description": "请求方法" }
+              }
+            }
+        responses:
+          200:
+            body:
+              text/plain:
+                example: |
+                  {
+                    "type": "string", "description": "字符串"
+                  }
+      delete:
+        description: 删除指定用户ID的用户信息
+        is: [secured, dataError, serverError]
+        responses:
+          204:
+          404:
+  /user-groups:
+    get:
+      description: 取得全部有效的用户组信息
+      is: [secured, serverError]
+      responses:
+        200:
+          body:
+            example: |
+              {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "description": "用户组名称" },
+                  "description": { "type": "string", "description": "用户组描述信息" },
+                  "seq": { "type": "integer", "description": "顺序" },
+                  "users": { "type": "array", "properties": [
+                    {
+                      "username": { "type": "string", "description": "用户名" },
+                      "password": { "type": "string", "description": "密码" },
+                      "email": { "type": "string", "description": "邮箱" },
+                      "superuser": { "type": "string", "description": "是否为超级用户" }
+                    }
+                  ] }
+                }
+              }
+    post:
+      description: 新增用户组
+      is: [secured, dataError, serverError]
+      body:
+        example: |
+          {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "用户组名称" },
+              "description": { "type": "string", "description": "用户组描述信息" },
+              "seq": { "type": "integer", "description": "顺序" }
+            }
+          }
+      responses:
+        201:
+          body:
+            text/plain:
+              example: |
+                {
+                  "type": "string", "description": "字符串"
+                }
+    /{id}:
+      uriParameters:
+        id:
+          description: 用户组ID
+          example: 1
+      get:
+        description: 取得指定用户组ID的用户组信息
+        responses:
+          200:
+            body:
+              example: |
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "description": "用户组名称" },
+                    "description": { "type": "string", "description": "用户组描述信息" },
+                    "seq": { "type": "integer", "description": "顺序" },
+                    "users": { "type": "array", "properties": [
+                      {
+                        "username": { "type": "string", "description": "用户名" },
+                        "password": { "type": "string", "description": "密码" },
+                        "email": { "type": "string", "description": "邮箱" },
+                        "superuser": { "type": "string", "description": "是否为超级用户" }
+                      }
+                    ] }
+                  }
+                }
+      put:
+        description: 更新指定用户组ID的用户组信息
+        is: [secured, dataError, serverError]
+        body:
+          example: |
+            {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "用户组名称" },
+                "description": { "type": "string", "description": "用户组描述信息" },
+                "seq": { "type": "integer", "description": "顺序" }
+              }
+            }
+        responses:
+          200:
+            body:
+              text/plain:
+                example: |
+                  {
+                    "type": "string", "description": "字符串"
+                  }
+      delete:
+        description: 删除指定用户组ID的用户组信息
+        is: [secured, dataError, serverError]
+        responses:
+          204:
+          404:
