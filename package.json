@@ -2,7 +2,7 @@
   "name": "@proper-enterprise-raml",
   "version": "0.3.3",
   "author": "ProperSoft",
-  "description": "普日平台API",
+  "description": "普日PEP平台API",
   "publishConfig": {
     "registry": "http://nexus.propersoft.cn:8081/repository/npm-internal/"
   }
