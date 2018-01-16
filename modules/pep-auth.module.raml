@@ -141,6 +141,74 @@ traits:
           204:
           404:
   /users:
+    get:
+      description: 取得查询用户信息列表
+      is: [secured, serverError]
+      queryParameters:
+        username:
+          description: 用户名
+          type: string
+          required: false
+        name:
+          description: 用户显示名
+          type: string
+          required: false
+        email:
+          description: 用户邮箱
+          type: string
+          required: false
+        phone:
+          description: 用户手机号
+          type: string
+          required: false
+        enable:
+          description: 用户状态(空为全部;Y为启用;N为停用)
+          type: string
+          required: false
+        pageNo:
+          description: 分页页码
+          type: integer
+          required: true
+        pageSize:
+          description: 分页大小
+          type: integer
+          required: true
+      responses:
+        200:
+          body:
+            example: |
+              {
+                "type": "array",
+                "properties": [
+                  "username": { "type": "string", "description": "用户名" },
+                  "password": { "type": "string", "description": "密码" },
+                  "name": { "type": "string", "description": "显示名" },
+                  "email": { "type": "string", "description": "邮箱" },
+                  "phone": { "type": "string", "description": "手机号" },
+                  "enable": { "type": "boolean", "description": "状态" },
+                  "superuser": { "type": "boolean", "description": "是否为超级用户" },
+                  "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" },
+                  "roleEntities": { "type": "array", "properties": [
+                    {
+                      "id": { "type": "string", "description": "角色ID" },
+                      "name": { "type": "string", "description": "角色名称" },
+                      "parent": { "type": "object", "description": "父亲角色信息" },
+                      "permissions": { "type": "string", "description": "权限，描述菜单的权限类型" },
+                      "menus": { "type": "array", "description": "角色下菜单集合" },
+                      "users": { "type": "array", "description": "角色下用户集合" }
+                    }
+                  ] }
+                  "userGroups": { "type": "array", "properties": [
+                    {
+                      "name": { "type": "string", "description": "用户组名称" },
+                      "description": { "type": "string", "description": "用户组描述信息" },
+                      "seq": { "type": "integer", "description": "顺序" },
+                      "users": { "type": "array", "description": "用户组下用户集合" }
+                    }
+                  ] }
+                }
+                ]
+              }
     post:
       description: 新增用户
       is: [secured, dataError, serverError]
@@ -166,6 +234,16 @@ traits:
                 {
                   "type": "string", "description": "字符串"
                 }
+    delete:
+          description: 删除多个用户信息
+          is: [secured, dataError, serverError]
+          queryParameters:
+            ids:
+              description: 用户信息Id列表(使用","分割)
+              type: string
+          responses:
+            204:
+            404:
     /{userId}:
       uriParameters:
         userId:
@@ -183,8 +261,22 @@ traits:
                 "properties": {
                   "username": { "type": "string", "description": "用户名" },
                   "password": { "type": "string", "description": "密码" },
+                  "name": { "type": "string", "description": "显示名" },
                   "email": { "type": "string", "description": "邮箱" },
-                  "superuser": { "type": "string", "description": "是否为超级用户" },
+                  "phone": { "type": "string", "description": "手机号 },
+                  "enable": { "type": "boolean", "description": "状态" },
+                  "superuser": { "type": "boolean", "description": "是否为超级用户" },
+                  "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" },
+                  "roleEntities": { "type": "array", "properties": [
+                    {
+                      "id": { "type": "string", "description": "角色ID" },
+                      "name": { "type": "string", "description": "角色名称" },
+                      "parent": { "type": "object", "description": "父亲角色信息" },
+                      "permissions": { "type": "string", "description": "权限，描述菜单的权限类型" },
+                      "menus": { "type": "array", "description": "角色下菜单集合" },
+                      "users": { "type": "array", "description": "角色下用户集合" }
+                    }
+                  ] }
                   "userGroups": { "type": "array", "properties": [
                     {
                       "name": { "type": "string", "description": "用户组名称" },
@@ -203,9 +295,11 @@ traits:
             {
               "type": "object",
               "properties": {
-                "name": { "type": "string", "description": "名称" },
-                "url": { "type": "string", "description": "权限对应的Url地址" },
-                "method": { "type": "string", "description": "请求方法" }
+                "name": { "type": "string", "description": "显示名" },
+                "email": { "type": "string", "description": "邮箱" },
+                "phone": { "type": "string", "description": "手机号" },
+                "password": { "type": "string", "description": "密码" },
+                "enable": { "type": "boolean", "description": "状态" }
               }
             }
         responses:
@@ -222,6 +316,50 @@ traits:
         responses:
           204:
           404:
+      /{groupId}:
+        uriParameters:
+          groupId:
+            description: 用户组ID
+            example: 1
+        post:
+          description: 新增用户到用户组
+          is: [secured, dataError, serverError]
+          responses:
+            201:
+              body:
+                text/plain:
+                  example: |
+                    {
+                      "type": "string", "description": "字符串"
+                    }
+        delete:
+          description: 从用户组中删除用户
+          is: [secured, dataError, serverError]
+          responses:
+            204:
+            404:
+      /{roleId}:
+        uriParameters:
+          roleId:
+            description: 角色ID
+            example: 1
+        post:
+          description: 用户添加新的角色
+          is: [secured, dataError, serverError]
+          responses:
+            201:
+              body:
+                text/plain:
+                  example: |
+                    {
+                      "type": "string", "description": "字符串"
+                    }
+        delete:
+          description: 用户删除角色
+          is: [secured, dataError, serverError]
+          responses:
+            204:
+            404:
   /user-groups:
     get:
       description: 取得全部有效的用户组信息
