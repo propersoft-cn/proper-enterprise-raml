@@ -67,8 +67,7 @@ traits:
                         "parentId": { "type": "string", "description": "父节点ID" },
                         "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
                         "menuType": { "type": "object",  "properties": {
-                          "code": { "type": "string", "description": "菜单类型编码" },
-                          "name": { "type": "string", "description": "菜单类型名称" }
+                          "code": { "type": "string", "description": "菜单类型编码" }
                           }
                         }
                       }
@@ -86,13 +85,9 @@ traits:
               "name": { "type": "string", "description": "菜单名称" },
               "route": { "type": "string", "description": "前端路径" },
               "enable": { "type": "boolean", "description": "菜单状态" },
-              "parent": { "type": "object", "description": "父节点信息" },
+              "parentId": { "type": "string", "description": "父节点Id" },
               "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-              "menuType": { "type": "object",  "properties": {
-                "code": { "type": "string", "description": "菜单类型编码" },
-                "name": { "type": "string", "description": "菜单类型名称" }
-                }
-              }
+              "menuCode": { "type": "string", "description": "菜单类型编码" }
             }
           }
       responses:
@@ -155,10 +150,7 @@ traits:
                         "identifier": { "type": "string", "description": "标识(预留字段)" },
                         "parentId": { "type": "string", "description": "父节点ID" },
                         "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                        "menuType": { "type": "object",  "properties": {
-                          "code": { "type": "string", "description": "菜单类型编码" },
-                          "name": { "type": "string", "description": "菜单类型名称" }
-                        }
+                        "menuCode": { "type": "string", "description": "菜单类型编码" }
                       }
                      }
                     }
@@ -236,11 +228,7 @@ traits:
               "url": { "type": "string", "description": "权限对应的Url地址" },
               "method": { "type": "string", "description": "请求方法" },
               "enable": { "type": "boolean", "description": "菜单状态" },
-              "resourceType": { "type": "object",  "properties": {
-                "code": { "type": "string", "description": "资源类型编码" },
-                "name": { "type": "string", "description": "资源类型名称" }
-              }
-              }
+              "resourceCode": { "type": "string",  "description": "资源类型编码" }
             }
           }
       responses:
@@ -303,8 +291,7 @@ traits:
                     "enable": { "type": "boolean", "description": "菜单状态" },
                     "identifier": { "type": "string", "description": "标识(预留字段)" },
                     "resourceType": { "type": "object",  "properties": {
-                      "code": { "type": "string", "description": "资源类型编码" },
-                      "name": { "type": "string", "description": "资源类型名称" }
+                      "code": { "type": "string", "description": "资源类型编码" }
                     }},
                     "dataRestrainEntities": { "type": "array", "properties": [
                       {
@@ -346,10 +333,7 @@ traits:
                 "url": { "type": "string", "description": "权限对应的Url地址" },
                 "method": { "type": "string", "description": "请求方法" },
                 "enable": { "type": "boolean", "description": "菜单状态" },
-                "resourceType": { "type": "object",  "properties": {
-                  "code": { "type": "string", "description": "资源类型编码" },
-                  "name": { "type": "string", "description": "资源类型名称" }
-                }}
+                "resourceCode": { "type": "string",  ""description": "资源类型编码" }
               }
             }
         responses:
@@ -450,6 +434,50 @@ traits:
         responses:
           204:
           404:
+      /group/{groupId}:
+        uriParameters:
+          groupId:
+            description: 用户组ID
+            example: 1
+        post:
+          description: 新增用户到用户组
+          is: [secured, dataError, serverError]
+          responses:
+            201:
+              body:
+                text/plain:
+                  example: |
+                    {
+                      "type": "string", "description": "字符串"
+                    }
+        delete:
+          description: 从用户组中删除用户
+          is: [secured, dataError, serverError]
+          responses:
+            204:
+            404:
+      /role/{roleId}:
+        uriParameters:
+          roleId:
+            description: 角色ID
+            example: 1
+        post:
+          description: 用户添加新的角色
+          is: [secured, dataError, serverError]
+          responses:
+            201:
+              body:
+                text/plain:
+                  example: |
+                    {
+                      "type": "string", "description": "字符串"
+                    }
+        delete:
+          description: 用户删除角色
+          is: [secured, dataError, serverError]
+          responses:
+            204:
+            404:
   /user-groups:
     get:
       description: 取得全部有效的用户组信息
