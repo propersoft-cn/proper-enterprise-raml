@@ -27,9 +27,9 @@ traits:
                 {
                   "type": "string", "description": "用户token"
                 }
-  /menu:
+  /menus:
     get:
-      description: 取得查询菜单列表
+      description: 获取用户菜单列表
       is: [secured, serverError]
       queryParameters:
         name:
@@ -48,24 +48,14 @@ traits:
           description: 菜单状态(空为全部;Y为启用;N为停用)
           type: string
           required: false
-        pageNo:
-          description: 分页页码
-          type: integer
-          required: true
-        pageSize:
-          description: 分页大小
-          type: integer
-          required: true
       responses:
         200:
           body:
             text/plain:
               example: |
                 {
-                  "type": "object",
-                  "properties": {
-                    "count": { "type": "long", "description": "数据数量" },
-                    "data": { "type": "array", "properties": [
+                  "type": "array",
+                    "properties": [
                       {
                         "id": { "type": "string", "description": "菜单ID" },
                         "icon": { "type": "string", "description": "菜单图标样式名称" },
@@ -79,10 +69,10 @@ traits:
                         "menuType": { "type": "object",  "properties": {
                           "code": { "type": "string", "description": "菜单类型编码" },
                           "name": { "type": "string", "description": "菜单类型名称" }
-                         }}
-                      }]
-                    }
-                  }
+                          }
+                        }
+                      }
+                    ]
                 }
     post:
       description: 新增菜单
@@ -233,36 +223,6 @@ traits:
                       }
                     }
                   }
-  /menus:
-    get:
-      description: 获取用户菜单
-      is: [secured, serverError]
-      responses:
-        200:
-          body:
-            text/plain:
-              example: |
-                {
-                  "type": "array",
-                  "properties": [
-                    {
-                      "id": { "type": "string", "description": "菜单ID" },
-                      "icon": { "type": "string", "description": "菜单图标样式名称" },
-                      "name": { "type": "string", "description": "菜单名称" },
-                      "route": { "type": "string", "description": "前端路径" },
-                      "enable": { "type": "boolean", "description": "菜单状态" },
-                      "root": { "type": "boolean", "description": "是否为根节点" },
-                      "identifier": { "type": "string", "description": "标识(预留字段)" },
-                      "parentId": { "type": "string", "description": "父节点ID" },
-                      "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                      "menuType": { "type": "object",  "properties": {
-                        "code": { "type": "string", "description": "菜单类型编码" },
-                        "name": { "type": "string", "description": "菜单类型名称" }
-                        }
-                      }
-                    }
-                  ]
-                }
   /resources:
     post:
       description: 新增资源
