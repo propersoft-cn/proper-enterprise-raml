@@ -1,6 +1,6 @@
 {
   "name": "@proper-enterprise-raml",
-  "version": "0.3.3",
+  "version": "0.3.4-SNAPSHOT",
   "author": "ProperSoft",
   "description": "普日PEP平台API",
   "publishConfig": {
