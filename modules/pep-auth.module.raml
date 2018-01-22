@@ -350,243 +350,7 @@ traits:
         responses:
           204:
           404:
-  /roles:
-    get:
-      description: 获取用户角色列表
-      is: [secured, serverError]
-      queryParameters:
-        name:
-          description: 角色名称
-          type: string
-          required: false
-        description:
-          description: 角色描述
-          type: string
-          required: false
-        parentId:
-          description: 角色父节点ID
-          type: string
-          required: false
-        enable:
-          description: 角色状态(空为全部;Y为启用;N为停用)
-          type: string
-          required: false
-      responses:
-        200:
-          body:
-            text/plain:
-              example: |
-                {
-                  "type": "array",
-                    "properties": [
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" },
-                        "userEntities": { "type": "array", "description": "用户列表"},
-                        "userGroupEntities": { "type": "array", "description": "用户组列表"},
-                        "menuEntities": { "type": "array", "description": "菜单列表"}
-                      }
-                    ]
-                }
-    post:
-      description: 新增角色
-      is: [secured, dataError, serverError]
-      body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string", "description": "角色名称" },
-              "description": { "type": "string", "description": "角色描述" },
-              "enable": { "type": "boolean", "description": "角色状态" },
-              "parentId": { "type": "string", "description": "角色节点ID" }
-            }
-          }
-      responses:
-        201:
-          body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
-    put:
-      description: 更新角色列表的状态信息
-      is: [secured, dataError, serverError]
-      body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "角色状态" },
-              "ids": { "type": "array", "description": "string类型角色ID列表" }
-            }
-          }
-      responses:
-        200:
-          body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
-    delete:
-      description: 删除多个角色信息
-      is: [secured, dataError, serverError]
-      queryParameters:
-        ids:
-          description: 角色信息Id列表(使用","分割)
-          type: string
-      responses:
-        204:
-        404:
-    /{roleId}:
-      get:
-        description: 取得指定角色ID详情信息
-        is: [secured, serverError]
-        responses:
-          200:
-            body:
-              text/plain:
-                example: |
-                  {
-                    "type": "object",
-                    "properties": {
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" },
-                        "userEntities": { "type": "array", "description": "用户列表"},
-                        "userGroupEntities": { "type": "array", "description": "用户组列表"}
-                      }
-                     }
-                    }
-                  }
-      put:
-        description: 更新指定角色ID的信息
-        is: [secured, dataError, serverError]
-        body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "id": { "type": "string", "description": "角色ID" },
-                "name": { "type": "string", "description": "角色名称" },
-                "description": { "type": "string", "description": "角色描述" },
-                "enable": { "type": "boolean", "description": "角色状态" },
-                "parentId": { "type": "string", "description": "角色节点ID" }
-              }
-            }
-        responses:
-          200:
-            body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
-    /parents:
-      get:
-        description: 父节点角色列表
-        is: [secured, serverError]
-        responses:
-          200:
-            body:
-              text/plain:
-                example: |
-                  {
-                    "type": "object",
-                    "properties": {
-                      "count": { "type": "long", "description": "数据数量" },
-                      "data": { "type": "array", "properties": [
-                        {
-                          "id": { "type": "string", "description": "角色ID" },
-                          "name": { "type": "string", "description": "角色名称" },
-                          "description": { "type": "string", "description": "角色描述" },
-                          "enable": { "type": "boolean", "description": "角色状态" },
-                          "parentId": { "type": "string", "description": "角色节点ID" },
-                          "userEntities": { "type": "array", "description": "用户列表"},
-                          "userGroupEntities": { "type": "array", "description": "用户组列表"}
-                           }}
-                        }]
-                      }
-                    }
-                  }
   /users:
-    get:
-      description: 取得查询用户信息列表
-      is: [secured, serverError]
-      queryParameters:
-        username:
-          description: 用户名
-          type: string
-          required: false
-        name:
-          description: 用户显示名
-          type: string
-          required: false
-        email:
-          description: 用户邮箱
-          type: string
-          required: false
-        phone:
-          description: 用户手机号
-          type: string
-          required: false
-        enable:
-          description: 用户状态(空为全部;Y为启用;N为停用)
-          type: string
-          required: false
-        pageNo:
-          description: 分页页码
-          type: integer
-          required: true
-        pageSize:
-          description: 分页大小
-          type: integer
-          required: true
-      responses:
-        200:
-          body:
-            example: |
-              {
-                "type": "array",
-                "properties": [
-                  "username": { "type": "string", "description": "用户名" },
-                  "password": { "type": "string", "description": "密码" },
-                  "name": { "type": "string", "description": "显示名" },
-                  "email": { "type": "string", "description": "邮箱" },
-                  "phone": { "type": "string", "description": "手机号" },
-                  "enable": { "type": "boolean", "description": "状态" },
-                  "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                  "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" },
-                  "roleEntities": { "type": "array", "properties": [
-                    {
-                      "id": { "type": "string", "description": "角色ID" },
-                      "name": { "type": "string", "description": "角色名称" },
-                      "parent": { "type": "object", "description": "父亲角色信息" },
-                      "permissions": { "type": "string", "description": "权限，描述菜单的权限类型" },
-                      "menus": { "type": "array", "description": "角色下菜单集合" },
-                      "users": { "type": "array", "description": "角色下用户集合" }
-                    }
-                  ] },
-                  "userGroups": { "type": "array", "properties": [
-                    {
-                      "id": { "type": "string", "description": "用户组ID" },
-                      "name": { "type": "string", "description": "用户组名称" },
-                      "description": { "type": "string", "description": "用户组描述信息" },
-                      "seq": { "type": "integer", "description": "顺序" },
-                      "users": { "type": "array", "description": "用户组下用户集合" }
-                    }
-                  ] }
-                }
-                ]
-              }
     post:
       description: 新增用户
       is: [secured, dataError, serverError]
@@ -600,7 +364,7 @@ traits:
               "password": { "type": "string", "description": "密码" },
               "email": { "type": "string", "description": "邮箱" },
               "phone": { "type": "string", "description": "手机号" },
-              "enable": { "type": "boolean", "description": "是否有效" },
+              "valid": { "type": "boolean", "description": "是否有效" },
               "superuser": { "type": "boolean", "description": "是否为超级用户" }
             }
           }
@@ -612,16 +376,6 @@ traits:
                 {
                   "type": "string", "description": "字符串"
                 }
-    delete:
-      description: 删除多个用户信息
-      is: [secured, dataError, serverError]
-      queryParameters:
-        ids:
-          description: 用户信息Id列表(使用","分割)
-          type: string
-      responses:
-        204:
-        404:
     /{userId}:
       uriParameters:
         userId:
@@ -639,23 +393,9 @@ traits:
                   "properties": {
                     "id": { "type": "string", "description": "用户ID" },
                     "username": { "type": "string", "description": "用户名" },
-                    "name": { "type": "string", "description": "显示名" },
                     "password": { "type": "string", "description": "密码" },
                     "email": { "type": "string", "description": "邮箱" },
-                    "phone": { "type": "string", "description": "手机号 },
-                    "enable": { "type": "boolean", "description": "状态" },
-                    "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                    "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" },
-                    "roleEntities": { "type": "array", "properties": [
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "parent": { "type": "object", "description": "父亲角色信息" },
-                        "permissions": { "type": "string", "description": "权限，描述菜单的权限类型" },
-                        "menus": { "type": "array", "description": "角色下菜单集合" },
-                        "users": { "type": "array", "description": "角色下用户集合" }
-                      }
-                    ] }
+                    "superuser": { "type": "string", "description": "是否为超级用户" },
                     "userGroups": { "type": "array", "properties": [
                       {
                         "id": { "type": "string", "description": "用户组ID" },
@@ -675,11 +415,9 @@ traits:
             {
               "type": "object",
               "properties": {
-                "name": { "type": "string", "description": "显示名" },
-                "email": { "type": "string", "description": "邮箱" },
-                "phone": { "type": "string", "description": "手机号" },
-                "password": { "type": "string", "description": "密码" },
-                "enable": { "type": "boolean", "description": "状态" }
+                "name": { "type": "string", "description": "名称" },
+                "url": { "type": "string", "description": "权限对应的Url地址" },
+                "method": { "type": "string", "description": "请求方法" }
               }
             }
         responses:
