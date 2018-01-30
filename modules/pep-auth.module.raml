@@ -763,18 +763,21 @@ traits:
           body:
             example: |
               {
-                "type": "array",
-                "properties": [{
-                  "id": { "type": "string", "description": "用户ID" },
-                  "username": { "type": "string", "description": "用户名" },
-                  "password": { "type": "string", "description": "密码" },
-                  "name": { "type": "string", "description": "显示名" },
-                  "email": { "type": "string", "description": "邮箱" },
-                  "phone": { "type": "string", "description": "手机号" },
-                  "enable": { "type": "boolean", "description": "状态" },
-                  "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                  "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                }]
+                "type": "object",
+                "properties": {
+                  "count": { "type": "integer", "description": "条数" },
+                  "data":{ "type": "array", "properties": [{
+                    "id": { "type": "string", "description": "用户ID" },
+                    "username": { "type": "string", "description": "用户名" },
+                    "password": { "type": "string", "description": "密码" },
+                    "name": { "type": "string", "description": "显示名" },
+                    "email": { "type": "string", "description": "邮箱" },
+                    "phone": { "type": "string", "description": "手机号" },
+                    "enable": { "type": "boolean", "description": "状态" },
+                    "superuser": { "type": "boolean", "description": "是否为超级用户" },
+                    "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
+                  }]}
+                }
               }
     post:
       description: 新增用户
