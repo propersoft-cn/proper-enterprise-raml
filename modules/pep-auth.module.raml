@@ -613,6 +613,27 @@ traits:
           responses:
             204:
             404:
+      /parents:
+        get:
+          description: 获取能够被 roleId 继承的父节点列表
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                text/plain:
+                  example: |
+                    {
+                      "type": "array",
+                      "properties": [
+                        {
+                          "id": { "type": "string", "description": "角色ID" },
+                          "name": { "type": "string", "description": "角色名称" },
+                          "description": { "type": "string", "description": "角色描述" },
+                          "enable": { "type": "boolean", "description": "角色状态" },
+                          "parentId": { "type": "string", "description": "角色节点ID" }
+                        }
+                      ]
+                    }
       /resources:
         get:
           description: 取得指定角色ID的资源列表
@@ -703,27 +724,6 @@ traits:
                       "seq": { "type": "integer", "description": "顺序" },
                       "enable": { "type": "boolean", "description": "状态" }
                     }]
-                  }
-    /parents:
-      get:
-        description: 父节点角色列表
-        is: [secured, serverError]
-        responses:
-          200:
-            body:
-              text/plain:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" }
-                      }
-                    ]
                   }
   /users:
     get:
