@@ -1,0 +1,29 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  id:
+    description: 角色 ID
+    required: true
+    type: string
+  name:
+    description: 角色名称
+    required: true
+    type: string
+  description:
+    description: 角色描述
+    required: true
+    type: string
+  enable:
+    description: 角色状态
+    required: true
+    type: boolean
+  parentId:
+    description: 角色父节点 ID
+    required: true
+    type: string
+example:
+  id: "1"
+  name: "普通管理员"
+  description: "平通权限管理员"
+  enable: true
+  parentId: "1"
