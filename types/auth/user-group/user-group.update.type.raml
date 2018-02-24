@@ -1,0 +1,24 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  name:
+    description: 用户组名称
+    required: true
+    type: string
+  description:
+    description: 用户组描述信息
+    required: true
+    type: string
+  seq:
+    description: 顺序
+    required: true
+    type: integer
+  enable:
+    description: 用户组状态
+    required: true
+    type: boolean
+example:
+  name: "测试管理组"
+  description: "测试管理用户组"
+  seq: 1
+  enable: true
