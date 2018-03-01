@@ -55,3 +55,9 @@ $ npm login --registry http://nexus.propersoft.cn:8081/repository/npm-internal/
 ```
 $ npm publish
 ```
+
+### API文档在线查看
+
+[最新提交PR的文档](http://192.168.1.101/api/pep/merge/api.html)
+
+[最新发布的文档](http://192.168.1.101/api/pep/api/api.html)
