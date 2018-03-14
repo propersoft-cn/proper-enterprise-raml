@@ -1,0 +1,87 @@
+#%RAML 1.0
+title: This is My API
+baseUri: /pep-webapp/
+version: 1.1.0
+
+/sj/byname/{username}:
+  displayName: saveuser
+  uriParameters:
+   username:
+    type: string
+    required: true
+    description: json格式 如{"username":"zhangsan"}
+  post:
+    description: 根据用户名查
+    responses:
+      200:
+        body:
+          application/json:
+            example:  |
+              {"id":"99be2236-2e24-4450-b53c-514ea40b3dbf","createUserId":"default-mock-user-id","createTime":"2016-07-17 19:31:03.893","lastModifyUserId":"default-mock-user-id","lastModifyTime":"2016-07-17 19:31:03.893","username":"zhangsan1","password":"1","email":null,"superuser":false,"roleEntities":[],"pepDtype":null,"jurisdictiongroup":"\"A组\",\"B组\"","group":"A组"}
+          
+/sj/users:
+  displayName: saveuser  
+  post:
+    description: 保存用户接口
+    queryParameters: 
+     userstr:
+      type: string
+      required: true
+      description: 用户信息json格式
+        example：{"user":{"username":"baibing","password":"123456","group":"A","jurisdictiongroup":"\"A组\",\"B组\""}}
+       
+    responses:
+      200:
+        body:
+          application/json:
+            example: |              
+               如果成功resultcode返回状态码00，如：{"result":"a5dc088f-2420-4918-89dd-9aa0f87c6bfb","resultcode":"00"}            
+               如果用户名重复返回resultcode返回状态码11，如：{"resultcode":"11"}
+            
+        
+/sj/deluser:
+  displayName: deluser
+  post:
+    description: 根据用户id删除用户接口
+    queryParameters: 
+     userid:
+      type: string
+      required: true
+      description: 用户id
+        example：{"userid":"8fb4365f-778e-4b61-b7c8-c3c72ac2fbbc"};
+    responses:
+      200:
+        body:
+          application/json:
+            example:  |
+              如果成功resultcode返回状态码20，如：{"resultcode":"20"}            
+              如果删除失败resultcode返回状态码21，如：{"resultcode":"21"}
+                
+/auth/login:
+  displayName: userlogin
+  post:
+    description: 用户登录获取token
+    queryParameters: 
+     postdata:
+      type: string
+      required: true
+      description: 登录用户名称和密码
+      example: "{'username':'admin','pwd':'123456'}"
+     
+    responses:
+      200:
+        body:
+          application/string:
+            example:  |
+              如果成功直接返回token值，如："eyJpZCI6InBlcC1zeXNhZG1pbiIsIm5hbWUiOiJhZG1pbiJ9.eyJlbXBOYW1lIjpudWxsLCJyb2xlcyI6bnVsbH0.JAYoxgSUlfpQBnk67l54GyKorIAfjgtN7t_PPWdZPDI"
+         
+      401:
+        body:
+          application/string:
+            example:  |
+              如果失败返回："Failed to authenticate"         
+              
+               
+      
+     
+
