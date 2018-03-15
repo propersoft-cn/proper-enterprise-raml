@@ -5,28 +5,81 @@ traits:
   secured: !include ../traits/secured.trait.raml
   dataError: !include ../traits/dataError.trait.raml
   serverError: !include ../traits/serverError.trait.raml
+types:
+  ########## Login post params ##################
+  LoginInfo:
+    type: object
+    properties:
+      username:
+        description: 用户名
+        required: true
+        type: string
+      pwd:
+        description: 密码
+        required: true
+        type: string
+    example:
+      username: "adm"
+      pwd: "123456"
+  ########## update enable ##################
+  EnableUpdate:
+    type: object
+    properties:
+      enable:
+        description: 状态
+        required: true
+        type: boolean
+      ids:
+        description: ID列表
+        required: true
+        type: array
+    example:
+      enable: true
+      ids: ["1", "2"]
+  ########## post multi ##################
+  PostMulti:
+    type: object
+    properties:
+      ids:
+        description: ID列表
+        required: true
+        type: array
+    example:
+      ids: ["1", "2"]
+  ########## Menu ##################
+  Menu: !include ../types/auth/menu/menu.type.raml
+  Menus: !include ../types/auth/menu/menus.type.raml
+  MenuUpdate: !include ../types/auth/menu/menu.update.type.raml
+  ########## Resource ##################
+  Resource: !include ../types/auth/resource/resource.type.raml
+  Resources: !include ../types/auth/resource/resources.type.raml
+  ResourceUpdate: !include ../types/auth/resource/resource.update.type.raml
+  ########## Role ##################
+  Role: !include ../types/auth/role/role.type.raml
+  Roles: !include ../types/auth/role/roles.type.raml
+  RoleUpdate: !include ../types/auth/role/role.update.type.raml
+  ########## User ##################
+  User: !include ../types/auth/user/user.type.raml
+  Users: !include ../types/auth/user/users.type.raml
+  UserPages: !include ../types/auth/user/users.pages.type.raml
+  UserUpdate: !include ../types/auth/user/user.update.type.raml
+  ########## UserGroup ##################
+  UserGroup: !include ../types/auth/user-group/user-group.type.raml
+  UserGroups: !include ../types/auth/user-group/user-groups.type.raml
+  UserGroupUpdate: !include ../types/auth/user-group/user-group.update.type.raml
+
 /auth:
   /login:
     post:
       description: 用户登录
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "username": { "type": "string", "description": "用户名" },
-              "pwd": { "type": "string", "description": "密码" }
-            }
-          }
+        type: LoginInfo
       responses:
         201:
           body:
             text/plain:
-              example: |
-                {
-                  "type": "string", "description": "用户token"
-                }
+              example: "token"
   /menus:
     get:
       description: 获取用户菜单列表
@@ -51,73 +104,25 @@ traits:
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "array",
-                    "properties": [
-                      {
-                        "id": { "type": "string", "description": "菜单ID" },
-                        "icon": { "type": "string", "description": "菜单图标样式名称" },
-                        "name": { "type": "string", "description": "菜单名称" },
-                        "route": { "type": "string", "description": "前端路径" },
-                        "enable": { "type": "boolean", "description": "菜单状态" },
-                        "root": { "type": "boolean", "description": "是否为根节点" },
-                        "identifier": { "type": "string", "description": "标识(预留字段)" },
-                        "parentId": { "type": "string", "description": "父节点ID" },
-                        "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                        "menuType": { "type": "object",  "properties": {
-                          "code": { "type": "string", "description": "菜单类型编码(0:应用/1:页面/2:功能)" }
-                          }
-                        }
-                      }
-                    ]
-                }
+            type: Menus
     post:
       description: 新增菜单
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "icon": { "type": "string", "description": "菜单图标样式名称" },
-              "name": { "type": "string", "description": "菜单名称" },
-              "route": { "type": "string", "description": "前端路径" },
-              "enable": { "type": "boolean", "description": "菜单状态" },
-              "parentId": { "type": "string", "description": "父节点Id" },
-              "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-              "menuCode": { "type": "string", "description": "菜单类型编码" }
-            }
-          }
+        type: MenuUpdate
       responses:
         201:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Menu
     put:
       description: 更新菜单列表的状态信息
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "菜单状态" },
-              "ids": { "type": "array", "description": "string类型菜单ID列表" }
-            }
-          }
+        type: EnableUpdate
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Menu
     delete:
       description: 删除多个菜单信息
       is: [secured, dataError, serverError]
@@ -129,57 +134,26 @@ traits:
         204:
         404:
     /{menuId}:
+      uriParameters:
+        menuId:
+          description: 菜单ID
+          example: 1
       get:
         description: 取得指定菜单ID详情信息
         is: [secured, serverError]
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string", "description": "菜单ID" },
-                      "icon": { "type": "string", "description": "菜单图标样式名称" },
-                      "name": { "type": "string", "description": "菜单名称" },
-                      "route": { "type": "string", "description": "前端路径" },
-                      "enable": { "type": "boolean", "description": "菜单状态" },
-                      "root": { "type": "boolean", "description": "是否为根节点" },
-                      "identifier": { "type": "string", "description": "标识(预留字段)" },
-                      "parentId": { "type": "string", "description": "父节点ID" },
-                      "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                      "menuType": { "type": "object",  "properties": {
-                        "code": { "type": "string", "description": "菜单类型编码(0:应用/1:页面/2:功能)" }
-                        }
-                      }
-                    }
-                  }
+              type: Menu
       put:
         description: 更新指定菜单ID的信息
         is: [secured, dataError, serverError]
         body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "icon": { "type": "string", "description": "菜单图标样式名称" },
-                "name": { "type": "string", "description": "菜单名称" },
-                "route": { "type": "string", "description": "前端路径" },
-                "enable": { "type": "boolean", "description": "菜单状态" },
-                "parent": { "type": "object", "description": "父节点信息" },
-                "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                "menuCode": { "type": "string", "description": "菜单类型编码" }
-              }
-            }
+          type: MenuUpdate
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
+              type: Menu
       /resource/{resourceId}:
         uriParameters:
           resourceId:
@@ -191,11 +165,7 @@ traits:
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: Menu
         delete:
           description: 菜单删除资源
           is: [secured, dataError, serverError]
@@ -209,22 +179,7 @@ traits:
           responses:
             200:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "array",
-                      "properties": [{
-                        "id": { "type": "string", "description": "资源 ID" },
-                        "url": { "type": "string", "description": "资源 URL" },
-                        "method": { "type": "string", "description": "资源 Method" },
-                        "name": { "type": "string", "description": "资源名称" },
-                        "enable": { "type": "boolean", "description": "菜单状态" },
-                        "identifier": { "type": "string", "description": "标识(预留字段)" },
-                        "resourceType": { "type": "object",  "properties": {
-                          "code": { "type": "string", "description": "资源类型编码(0:方法)" }
-                        }
-                      }]
-                    }
+                type: Resources
       /roles:
         get:
           description: 取得指定菜单ID的角色列表信息
@@ -232,18 +187,7 @@ traits:
           responses:
             200:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "array",
-                      "properties": [{
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" }
-                      }]
-                    }
+                type: Roles
     /parents:
       get:
         description: 父节点菜单列表
@@ -251,72 +195,26 @@ traits:
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "array",
-                    "properties":  [
-                      {
-                        "id": { "type": "string", "description": "菜单ID" },
-                        "icon": { "type": "string", "description": "菜单图标样式名称" },
-                        "name": { "type": "string", "description": "菜单名称" },
-                        "route": { "type": "string", "description": "前端路径" },
-                        "enable": { "type": "boolean", "description": "菜单状态" },
-                        "root": { "type": "boolean", "description": "是否为根节点" },
-                        "identifier": { "type": "string", "description": "标识(预留字段)" },
-                        "parentId": { "type": "string", "description": "父节点ID" },
-                        "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                        "menuType": { "type": "object",  "properties": {
-                          "code": { "type": "string", "description": "菜单类型编码(0:应用/1:页面/2:功能)" }
-                          }
-                        }
-                      }
-                    ]
-                  }
+              type: Menus
   /resources:
     post:
       description: 新增资源
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string", "description": "名称" },
-              "url": { "type": "string", "description": "权限对应的Url地址" },
-              "method": { "type": "string", "description": "请求方法" },
-              "enable": { "type": "boolean", "description": "菜单状态" },
-              "resourceCode": { "type": "string",  "description": "资源类型编码" }
-            }
-          }
+        type: ResourceUpdate
       responses:
         201:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Resource
     put:
       description: 更新资源列表的状态信息
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "资源状态" },
-              "ids": { "type": "array", "description": "string类型资源ID列表" }
-            }
-          }
+        EnableUpdate
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Resources
     delete:
       description: 删除多个资源信息
       is: [secured, dataError, serverError]
@@ -338,44 +236,16 @@ traits:
         responses:
           200:
             body:
-              example: |
-                {
-                  "type": "object",
-                  "properties": {
-                    "id": { "type": "string", "description": "资源 ID" },
-                    "url": { "type": "string", "description": "资源 URL" },
-                    "method": { "type": "string", "description": "资源 Method" },
-                    "name": { "type": "string", "description": "资源名称" },
-                    "enable": { "type": "boolean", "description": "菜单状态" },
-                    "identifier": { "type": "string", "description": "标识(预留字段)" },
-                    "resourceType": { "type": "object",  "properties": {
-                      "code": { "type": "string", "description": "资源类型编码" }
-                    }}
-                  }
-                }
+              type: Resource
       put:
         description: 更新指定资源ID的资源信息
         is: [secured, dataError, serverError]
         body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string", "description": "名称" },
-                "url": { "type": "string", "description": "权限对应的Url地址" },
-                "method": { "type": "string", "description": "请求方法" },
-                "enable": { "type": "boolean", "description": "菜单状态" },
-                "resourceCode": { "type": "string",  ""description": "资源类型编码" }
-              }
-            }
+          type: ResourceUpdate
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
+              type: Resource
       delete:
         description: 删除指定资源ID的资源信息
         is: [secured, dataError, serverError]
@@ -389,25 +259,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "菜单ID" },
-                      "icon": { "type": "string", "description": "菜单图标样式名称" },
-                      "name": { "type": "string", "description": "菜单名称" },
-                      "route": { "type": "string", "description": "前端路径" },
-                      "enable": { "type": "boolean", "description": "菜单状态" },
-                      "root": { "type": "boolean", "description": "是否为根节点" },
-                      "identifier": { "type": "string", "description": "标识(预留字段)" },
-                      "parentId": { "type": "string", "description": "父节点ID" },
-                      "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                      "menuType": { "type": "object",  "properties": {
-                        "code": { "type": "string", "description": "菜单类型编码(0:应用/1:页面/2:功能)" }
-                        }
-                      }
-                    }]
-                  }
+                type: Menus
       /roles:
         get:
           description: 取得指定资源ID的角色列表
@@ -415,17 +267,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "角色ID" },
-                      "name": { "type": "string", "description": "角色名称" },
-                      "description": { "type": "string", "description": "角色描述" },
-                      "enable": { "type": "boolean", "description": "角色状态" },
-                      "parentId": { "type": "string", "description": "角色节点ID" }
-                    }]
-                  }
+                type: Roles
   /roles:
     get:
       description: 获取用户角色列表
@@ -450,62 +292,25 @@ traits:
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "array",
-                    "properties": [
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" }
-                      }
-                    ]
-                }
+            type: Roles
     post:
       description: 新增角色
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string", "description": "角色名称" },
-              "description": { "type": "string", "description": "角色描述" },
-              "enable": { "type": "boolean", "description": "角色状态" },
-              "parentId": { "type": "string", "description": "角色节点ID" }
-            }
-          }
+        type: RoleUpdate
       responses:
         201:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Role
     put:
       description: 更新角色列表的状态信息
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "角色状态" },
-              "ids": { "type": "array", "description": "string类型角色ID列表" }
-            }
-          }
+        type: EnableUpdate
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: Role
     delete:
       description: 删除多个角色信息
       is: [secured, dataError, serverError]
@@ -523,41 +328,16 @@ traits:
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string", "description": "角色ID" },
-                      "name": { "type": "string", "description": "角色名称" },
-                      "description": { "type": "string", "description": "角色描述" },
-                      "enable": { "type": "boolean", "description": "角色状态" },
-                      "parentId": { "type": "string", "description": "角色节点ID" }
-                    }
-                  }
+              type: Role
       put:
         description: 更新指定角色ID的信息
         is: [secured, dataError, serverError]
         body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "id": { "type": "string", "description": "角色ID" },
-                "name": { "type": "string", "description": "角色名称" },
-                "description": { "type": "string", "description": "角色描述" },
-                "enable": { "type": "boolean", "description": "角色状态" },
-                "parentId": { "type": "string", "description": "角色节点ID" }
-              }
-            }
+          type: RoleUpdate
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
+              type: Role
       /menus:
         get:
           description: 取得指定角色ID的菜单列表
@@ -565,44 +345,16 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "菜单ID" },
-                      "icon": { "type": "string", "description": "菜单图标样式名称" },
-                      "name": { "type": "string", "description": "菜单名称" },
-                      "route": { "type": "string", "description": "前端路径" },
-                      "enable": { "type": "boolean", "description": "菜单状态" },
-                      "root": { "type": "boolean", "description": "是否为根节点" },
-                      "identifier": { "type": "string", "description": "标识(预留字段)" },
-                      "parentId": { "type": "string", "description": "父节点ID" },
-                      "sequenceNumber": { "type": "integer", "description": "菜单同级排序号" },
-                      "menuType": { "type": "object",  "properties": {
-                        "code": { "type": "string", "description": "菜单类型编码(0:应用/1:页面/2:功能)" }
-                        }
-                      }
-                    }]
-                  }
+               type: Menus
         post:
           body:
-            example: |
-              {
-                "type": "object",
-                "properties": {
-                  "ids": { "type": "string", "description": "用 , 分隔的菜单ID字符串", "example": "1,2" }
-                }
-              }
+            type: PostMulti
           description: 角色添加多个菜单
           is: [secured, dataError, serverError]
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: Menus
         delete:
           description: 角色删除多个菜单
           is: [secured, dataError, serverError]
@@ -613,6 +365,14 @@ traits:
           responses:
             204:
             404:
+      /parents:
+        get:
+          description: 获取能够被 roleId 继承的父节点列表
+          is: [secured, serverError]
+          responses:
+            200:
+              body:
+                type: Roles
       /resources:
         get:
           description: 取得指定角色ID的资源列表
@@ -620,40 +380,16 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "资源 ID" },
-                      "url": { "type": "string", "description": "资源 URL" },
-                      "method": { "type": "string", "description": "资源 Method" },
-                      "name": { "type": "string", "description": "资源名称" },
-                      "enable": { "type": "boolean", "description": "菜单状态" },
-                      "identifier": { "type": "string", "description": "标识(预留字段)" },
-                      "resourceType": { "type": "object",  "properties": {
-                        "code": { "type": "string", "description": "资源类型编码(0:方法)" }
-                      }
-                    }]
-                  }
+                type: Resources
         post:
           body:
-            example: |
-              {
-                "type": "object",
-                "properties": {
-                  "ids": { "type": "string", "description": "用 , 分隔的资源ID字符串", "example": "1,2" }
-                }
-              }
+            type: PostMulti
           description: 角色添加多个资源
           is: [secured, dataError, serverError]
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: Resources
         delete:
           description: 角色删除多个资源
           is: [secured, dataError, serverError]
@@ -671,21 +407,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "用户ID" },
-                      "username": { "type": "string", "description": "用户名" },
-                      "password": { "type": "string", "description": "密码" },
-                      "name": { "type": "string", "description": "显示名" },
-                      "email": { "type": "string", "description": "邮箱" },
-                      "phone": { "type": "string", "description": "手机号" },
-                      "enable": { "type": "boolean", "description": "状态" },
-                      "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                      "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                    }]
-                  }
+                type: Users
       /user-groups:
         get:
           description: 取得指定角色ID的用户组列表
@@ -693,38 +415,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "用户组ID" },
-                      "name": { "type": "string", "description": "用户组名称" },
-                      "description": { "type": "string", "description": "用户组描述信息" },
-                      "seq": { "type": "integer", "description": "顺序" },
-                      "enable": { "type": "boolean", "description": "状态" }
-                    }]
-                  }
-    /parents:
-      get:
-        description: 父节点角色列表
-        is: [secured, serverError]
-        responses:
-          200:
-            body:
-              text/plain:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [
-                      {
-                        "id": { "type": "string", "description": "角色ID" },
-                        "name": { "type": "string", "description": "角色名称" },
-                        "description": { "type": "string", "description": "角色描述" },
-                        "enable": { "type": "boolean", "description": "角色状态" },
-                        "parentId": { "type": "string", "description": "角色节点ID" }
-                      }
-                    ]
-                  }
+                type: UserGroups
   /users:
     get:
       description: 取得查询用户信息列表
@@ -761,66 +452,25 @@ traits:
       responses:
         200:
           body:
-            example: |
-              {
-                "type": "array",
-                "properties": [{
-                  "id": { "type": "string", "description": "用户ID" },
-                  "username": { "type": "string", "description": "用户名" },
-                  "password": { "type": "string", "description": "密码" },
-                  "name": { "type": "string", "description": "显示名" },
-                  "email": { "type": "string", "description": "邮箱" },
-                  "phone": { "type": "string", "description": "手机号" },
-                  "enable": { "type": "boolean", "description": "状态" },
-                  "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                  "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                }]
-              }
+            type: UserPages
     post:
       description: 新增用户
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "username": { "type": "string", "description": "用户名" },
-              "name": { "type": "string", "description": "显示名" },
-              "password": { "type": "string", "description": "密码" },
-              "email": { "type": "string", "description": "邮箱" },
-              "phone": { "type": "string", "description": "手机号" },
-              "enable": { "type": "boolean", "description": "是否有效" },
-              "superuser": { "type": "boolean", "description": "是否为超级用户" }
-            }
-          }
+        type: UserUpdate
       responses:
         201:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: User
     put:
       description: 更新用户列表的状态信息
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "用户状态" },
-              "ids": { "type": "array", "description": "string类型用户ID列表" }
-            }
-          }
+        type: UserUpdate
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: User
     delete:
       description: 删除多个用户信息
       is: [secured, dataError, serverError]
@@ -842,44 +492,16 @@ traits:
         responses:
           200:
             body:
-              example: |
-                {
-                  "type": "object",
-                  "properties": {
-                    "id": { "type": "string", "description": "用户ID" },
-                    "username": { "type": "string", "description": "用户名" },
-                    "name": { "type": "string", "description": "显示名" },
-                    "password": { "type": "string", "description": "密码" },
-                    "email": { "type": "string", "description": "邮箱" },
-                    "phone": { "type": "string", "description": "手机号" },
-                    "enable": { "type": "boolean", "description": "状态" },
-                    "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                    "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                  }
-              }
+              type: User
       put:
         description: 更新指定用户ID的用户信息
         is: [secured, dataError, serverError]
         body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string", "description": "显示名" },
-                "email": { "type": "string", "description": "邮箱" },
-                "phone": { "type": "string", "description": "手机号" },
-                "password": { "type": "string", "description": "密码" },
-                "enable": { "type": "boolean", "description": "状态" }
-              }
-            }
+          type: UserUpdate
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
+              type: User
       delete:
         description: 删除指定用户ID的用户信息
         is: [secured, dataError, serverError]
@@ -897,11 +519,7 @@ traits:
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: Role
         delete:
           description: 用户删除角色
           is: [secured, dataError, serverError]
@@ -915,17 +533,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "角色ID" },
-                      "name": { "type": "string", "description": "角色名称" },
-                      "description": { "type": "string", "description": "角色描述" },
-                      "enable": { "type": "boolean", "description": "角色状态" },
-                      "parentId": { "type": "string", "description": "角色节点ID" }
-                    }]
-                  }
+                type: Roles
       /user-groups:
         get:
           description: 取得指定用户ID的用户组列表
@@ -933,17 +541,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "用户组ID" },
-                      "name": { "type": "string", "description": "用户组名称" },
-                      "description": { "type": "string", "description": "用户组描述信息" },
-                      "seq": { "type": "integer", "description": "顺序" },
-                      "enable": { "type": "boolean", "description": "状态" }
-                    }]
-                  }
+                type: UserGroups
     /query:
       get:
         description: 通过用户名或者显示名或者手机号查询用户信息列表
@@ -956,21 +554,7 @@ traits:
         responses:
           200:
             body:
-              example: |
-                {
-                  "type": "array",
-                  "properties": [{
-                    "id": { "type": "string", "description": "用户ID" },
-                    "username": { "type": "string", "description": "用户名" },
-                    "name": { "type": "string", "description": "显示名" },
-                    "password": { "type": "string", "description": "密码" },
-                    "email": { "type": "string", "description": "邮箱" },
-                    "phone": { "type": "string", "description": "手机号" },
-                    "enable": { "type": "boolean", "description": "状态" },
-                    "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                    "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                  }]
-                }
+              type: Users
   /user-groups:
     get:
       description: 取得查询用户信息列表
@@ -991,59 +575,25 @@ traits:
       responses:
         200:
           body:
-            example: |
-              {
-                "type": "array",
-                "properties": [{
-                  "id": { "type": "string", "description": "用户组ID" },
-                  "name": { "type": "string", "description": "用户组名称" },
-                  "description": { "type": "string", "description": "用户组描述信息" },
-                  "seq": { "type": "integer", "description": "顺序" },
-                  "enable": { "type": "boolean", "description": "状态" }
-                }]
-              }
+            type: UserGroups
     post:
       description: 新增用户组
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string", "description": "用户组名称" },
-              "description": { "type": "string", "description": "用户组描述信息" },
-              "seq": { "type": "integer", "description": "顺序" },
-              "enable": { "type": "boolean", "description": "状态" }
-            }
-          }
+        type: UserGroupUpdate
       responses:
         201:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: UserGroup
     put:
       description: 更新用户组列表的状态信息
       is: [secured, dataError, serverError]
       body:
-        example: |
-          {
-            "type": "object",
-            "properties": {
-              "enable": { "type": "boolean", "description": "用户状态" },
-              "ids": { "type": "array", "description": "string类型用户ID列表" }
-            }
-          }
+        type: EnableUpdate
       responses:
         200:
           body:
-            text/plain:
-              example: |
-                {
-                  "type": "string", "description": "字符串"
-                }
+            type: UserGroup
     delete:
       description: 删除多个用户组信息
       is: [secured, dataError, serverError]
@@ -1064,39 +614,16 @@ traits:
         responses:
           200:
             body:
-              example: |
-                {
-                  "type": "object",
-                  "properties": {
-                    "id": { "type": "string", "description": "用户组ID" }
-                    "name": { "type": "string", "description": "用户组名称" },
-                    "description": { "type": "string", "description": "用户组描述信息" },
-                    "seq": { "type": "integer", "description": "顺序" },
-                    "enable": { "type": "boolean", "description": "状态" }
-                  }
-                }
+              type: UserGroup
       put:
         description: 更新指定用户组ID的用户组信息
         is: [secured, dataError, serverError]
         body:
-          example: |
-            {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string", "description": "用户组名称" },
-                "description": { "type": "string", "description": "用户组描述信息" },
-                "seq": { "type": "integer", "description": "顺序" },
-                "enable": { "type": "boolean", "description": "状态" }
-              }
-            }
+          type: UserGroupUpdate
         responses:
           200:
             body:
-              text/plain:
-                example: |
-                  {
-                    "type": "string", "description": "字符串"
-                  }
+              type: UserGroup
       delete:
         description: 删除指定用户组ID的用户组信息
         is: [secured, dataError, serverError]
@@ -1114,11 +641,7 @@ traits:
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: Role
         delete:
           description: 用户组删除角色
           is: [secured, dataError, serverError]
@@ -1132,17 +655,7 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      "id": { "type": "string", "description": "角色ID" },
-                      "name": { "type": "string", "description": "角色名称" },
-                      "description": { "type": "string", "description": "角色描述" },
-                      "enable": { "type": "boolean", "description": "角色状态" },
-                      "parentId": { "type": "string", "description": "角色节点ID" }
-                    }]
-                  }
+                type: Roles
       /user/{userId}:
         uriParameters:
           userId:
@@ -1154,11 +667,7 @@ traits:
           responses:
             201:
               body:
-                text/plain:
-                  example: |
-                    {
-                      "type": "string", "description": "字符串"
-                    }
+                type: User
         delete:
           description: 用户组删除用户
           is: [secured, dataError, serverError]
@@ -1172,18 +681,4 @@ traits:
           responses:
             200:
               body:
-                example: |
-                  {
-                    "type": "array",
-                    "properties": [{
-                      id": { "type": "string", "description": "用户ID" },
-                      "username": { "type": "string", "description": "用户名" },
-                      "name": { "type": "string", "description": "显示名" },
-                      "password": { "type": "string", "description": "密码" },
-                      "email": { "type": "string", "description": "邮箱" },
-                      "phone": { "type": "string", "description": "手机号" },
-                      "enable": { "type": "boolean", "description": "状态" },
-                      "superuser": { "type": "boolean", "description": "是否为超级用户" },
-                      "pepDtype": { "type": "boolean", "description": "PEP平台数据类型" }
-                    }]
-                  }
+                type: Users

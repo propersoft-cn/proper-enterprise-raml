@@ -1,0 +1,59 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  id:
+    description: 菜单ID
+    required: true
+    type: string
+  icon:
+    description: 菜单图标样式名称
+    required: true
+    type: string
+  name:
+    description: 菜单名称
+    required: true
+    type: string
+  route:
+    description: 前端路径
+    required: true
+    type: string
+  enable:
+    description: 菜单状态
+    required: true
+    type: boolean
+  root:
+    description: 是否为根节点
+    required: true
+    type: boolean
+  identifier:
+    description: 标识(预留字段)
+    required: false
+    type: string
+  parentId:
+    description: 父节点ID
+    required: true
+    type: string
+  sequenceNumber:
+    description: 菜单同级排序号
+    required: true
+    type: integer
+  menuType:
+    description: 菜单类别
+    required: true
+    type: object
+    properties:
+      code:
+        description: 菜单类别编码(0:应用/1:页面/2:功能)
+        required: true
+        type: string
+example:
+  id: "1"
+  icon: "icon"
+  name: 菜单
+  route: /menu/resource
+  enable: true
+  root: false
+  identifier: "identifier"
+  parentId: "parentId"
+  sequenceNumber: 1
+  menuType: { "code": "1" }

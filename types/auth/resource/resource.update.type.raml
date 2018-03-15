@@ -1,0 +1,29 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  name:
+    description: 资源名称
+    required: true
+    type: string
+  url:
+    description: 权限对应的Url地址
+    required: true
+    type: string
+  method:
+    description: 请求方法
+    required: true
+    type: string
+  enable:
+    description: 资源状态
+    required: true
+    type: boolean
+  resourceCode:
+    description: 资源类型编码(0:方法)
+    required: true
+    type: string
+example:
+  name: "修改"
+  url: "/resource/update"
+  method: "PUT"
+  enable: true
+  resourceCode: "0"

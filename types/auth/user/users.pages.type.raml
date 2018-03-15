@@ -1,0 +1,26 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  count:
+    description: 数据条数
+    required: true
+    type: integer
+  data:
+    description: 数据条数
+    required: true
+    type: User[]
+example:
+  count: 1
+  data: [
+    {
+      id: "1",
+      username: "adm",
+      pwd: "123456",
+      name: "普通管理员",
+      email: "adm@test.com",
+      phone: "13012345678",
+      enable: true,
+      superuser: false,
+      pepDtype: "pepDtype"
+    }
+  ]

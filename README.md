@@ -17,10 +17,10 @@ api.html                    //生成的html形式接口文档
 
 文档规范
 ----------
--版本统一使用RAML 1.0
--title为模块名称
--baseUri内路径从类别开始(例：/hr/leave)，和路径保持一致
--公共属性必须定义到指定文件夹内，raml文档使用相对路径引用公共属性
+- 版本统一使用RAML 1.0
+- title为模块名称
+- baseUri内路径从类别开始(例：/hr/leave)，和路径保持一致
+- 公共属性必须定义到指定文件夹内，raml文档使用相对路径引用公共属性
 
 版本号规范
 ---------
@@ -55,3 +55,9 @@ $ npm login --registry http://nexus.propersoft.cn:8081/repository/npm-internal/
 ```
 $ npm publish
 ```
+
+### API文档在线查看
+
+[最新提交PR的文档](http://192.168.1.101/api/pep/merge/api.html)
+
+[最新发布的文档](http://192.168.1.101/api/pep/api/api.html)

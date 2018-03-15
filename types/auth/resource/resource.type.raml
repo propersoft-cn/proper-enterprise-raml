@@ -1,0 +1,44 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  id:
+    description: 资源 ID
+    required: true
+    type: string
+  url:
+    description: 资源 URL
+    required: true
+    type: string
+  method:
+    description: 资源 Method
+    required: true
+    type: string
+  name:
+    description: 资源名称
+    required: true
+    type: string
+  enable:
+    description: 资源状态
+    required: true
+    type: boolean
+  identifier:
+    description: 标识(预留字段)
+    required: false
+    type: string
+  resourceType:
+    description: 资源类型
+    required: true
+    type: object
+    properties:
+      code:
+        description: 资源类型编码(0:方法)
+        required: true
+        type: string
+example:
+  id: "1"
+  url: "/resource/get"
+  method: "GET"
+  name: "获取资源"
+  enable: true
+  identifier: "identifier"
+  resourceType: { "code": "0" }
