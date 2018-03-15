@@ -5,6 +5,7 @@ traits:
   secured: !include ../traits/secured.trait.raml
   dataError: !include ../traits/dataError.trait.raml
   serverError: !include ../traits/serverError.trait.raml
+  pageable: !include ../traits/pageInfo.trait.raml
 types:
   ########## Login post params ##################
   LoginInfo:
@@ -419,7 +420,7 @@ types:
   /users:
     get:
       description: 取得查询用户信息列表
-      is: [secured, serverError]
+      is: [secured, serverError, pageable]
       queryParameters:
         username:
           description: 用户名
@@ -441,14 +442,6 @@ types:
           description: 用户状态(空为全部;Y为启用;N为停用)
           type: string
           required: false
-        pageNo:
-          description: 分页页码
-          type: integer
-          required: true
-        pageSize:
-          description: 分页大小
-          type: integer
-          required: true
       responses:
         200:
           body:
